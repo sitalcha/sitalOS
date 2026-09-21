@@ -1,0 +1,343 @@
+name: discord-notify-build-release
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  issues:
+  issue_comment:
+  workflow_dispatch:
+  release:
+  watch:
+
+permissions:
+  contents: write
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+      has_changes: ${{ steps.detect_changes.outputs.has_changes }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect webos-desktop changes
+        id: detect_changes
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] && git diff --name-only HEAD~1 HEAD | grep -q '^webos-desktop/'; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get next version
+        id: version
+        run: |
+          DATE_TAG="v$(date +'%Y.%-m.%-d')-${{ github.run_number }}"
+          echo "tag=$DATE_TAG" >> $GITHUB_OUTPUT
+          echo "Using version: $DATE_TAG"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable pnpm via corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10 --activate
+          pnpm -v
+
+      - name: Handle events
+        shell: bash
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_BUILD_WEBHOOK: ${{ secrets.DISCORD_BUILD_WEBHOOK }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          RELEASE_NAME: ${{ github.event.release.name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+        run: |
+          set -e
+
+          EVENT="${{ github.event_name }}"
+
+          case "$EVENT" in
+            push|pull_request|issues|issue_comment|release|watch|workflow_dispatch) ;;
+            *)
+              echo "Ignoring unsupported event: $EVENT"
+              exit 0
+              ;;
+          esac
+
+          send_discord() {
+            local content="$1"
+            local payload
+            payload=$(jq -n --arg content "$content" '{content: $content}')
+            curl -H "Content-Type: application/json" -d "$payload" "$DISCORD_WEBHOOK"
+          }
+
+          send_discord_embed() {
+            local payload="$1"
+            curl -H "Content-Type: application/json" \
+              -d "$payload" \
+              "$DISCORD_WEBHOOK"
+          }
+
+          if [ "$EVENT" = "push" ]; then
+            if [ "${{ github.actor }}" = "Reeyuki" ]; then
+              SHORT_SHA="${GITHUB_SHA::7}"
+              payload=$(jq -n \
+                --arg name "Reeyuki" \
+                --arg icon "https://cdn.discordapp.com/avatars/452491822871085066/5cfc60e7dcf86a9eadee0bf2e84f1cf7.webp?size=160" \
+                --arg value "\`${SHORT_SHA}\` - ${COMMIT_MESSAGE}" \
+                '{embeds: [{author: {name: $name, icon_url: $icon}, fields: [{name: "Commit", value: $value, inline: false}]}]}')
+              send_discord_embed "$payload"
+            else
+              send_discord "[push] ${{ github.actor }} on ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: $COMMIT_MESSAGE
+            ${{ github.event.head_commit.url }}"
+            fi
+
+            if git diff --name-only HEAD~1 HEAD | grep -q '^webos-desktop/'; then
+              echo "Changes detected in webos-desktop, building..."
+              echo "BUILD_WEB=true" >> $GITHUB_ENV
+            else
+              echo "No webos-desktop changes, skipping build"
+            fi
+            exit 0
+          fi
+
+          if [ "$EVENT" = "pull_request" ]; then
+            send_discord "[PR] ${{ github.actor }}
+            $PR_TITLE
+            $PR_URL"
+            exit 0
+          fi
+
+          if [ "$EVENT" = "issues" ]; then
+            send_discord "[Issue] $ISSUE_TITLE
+            $ISSUE_URL"
+            exit 0
+          fi
+
+          if [ "$EVENT" = "issue_comment" ]; then
+            send_discord "[Comment] ${{ github.actor }}
+            $COMMENT_BODY"
+            exit 0
+          fi
+
+          if [ "$EVENT" = "release" ]; then
+            send_discord "[Release] $RELEASE_NAME
+            $RELEASE_URL"
+            exit 0
+          fi
+
+          if [ "$EVENT" = "watch" ]; then
+            send_discord "⭐ ${{ github.actor }} starred ${{ github.repository }}"
+            exit 0
+          fi
+
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "BUILD_WEB=true" >> $GITHUB_ENV
+            exit 0
+          fi
+
+      - name: Build web app and upload to Discord
+        if: env.BUILD_WEB == 'true'
+        shell: bash
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          cd webos-desktop
+
+          pnpm install --frozen-lockfile
+
+          pnpm build
+          mv dist dist-web
+          pnpm build:single
+          mv dist dist-single
+
+          SHA="${GITHUB_SHA::7}"
+          SUBJECT="$COMMIT_MESSAGE"
+
+          upload_file() {
+            local file="$1"
+            local type="$2"
+            local content="$3"
+            local payload
+            payload=$(jq -n \
+              --arg sha "$SHA" \
+              --arg subject "$SUBJECT" \
+              --arg content "$content" \
+              '{content: $content}')
+            curl -s -F "payload_json=$payload" \
+                 -F "file1=@${file};type=$type" \
+                 "${{ secrets.DISCORD_BUILD_WEBHOOK }}"
+          }
+
+          SINGLE_HTML="dist-single/index.html"
+          if [ -f "$SINGLE_HTML" ]; then
+            RESPONSE=$(upload_file "$SINGLE_HTML" "text/html" "🚀 Single-file HTML for YukiOS from $SHA ($SUBJECT)")
+            if echo "$RESPONSE" | grep -q '40005\|Request entity too large'; then
+              echo "Single HTML exceeds Discord upload limit, uploading zipped instead"
+              (cd dist-single && zip ../yukios-single.zip index.html)
+              if [ -f "yukios-single.zip" ]; then
+                upload_file "yukios-single.zip" "application/zip" "📄 Single-file HTML (zipped) for YukiOS from $SHA ($SUBJECT)"
+              fi
+            fi
+          fi
+
+          if [ -f "$SINGLE_HTML" ]; then
+            INPUT_FILE="$SINGLE_HTML"
+            OUTPUT_FILE="yukios.svg"
+            ENCODED=$(base64 -w 0 "$INPUT_FILE")
+            cat <<EOF > "$OUTPUT_FILE"
+          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="position:fixed;top:0;left:0;">
+          <foreignObject x="0" y="0" width="100%" height="100%">
+          <body xmlns="http://www.w3.org/1999/xhtml">
+          <iframe id="test" style="position:fixed;top:0;left:0;width:100%;height:100%;border:none;margin:0;padding:0;overflow:hidden;"></iframe>
+          <script>
+          let encoded = "$ENCODED";
+          document.getElementById("test").srcdoc = atob(encoded);
+          </script>
+          </body>
+          </foreignObject>
+          </svg>
+          EOF
+            echo "Successfully converted $INPUT_FILE to $OUTPUT_FILE"
+            if [ -f "$OUTPUT_FILE" ]; then
+              upload_file "$OUTPUT_FILE" "image/svg+xml" "🖼️ SVG variant for YukiOS from $SHA ($SUBJECT)"
+            fi
+          fi
+
+          if [ -d dist-web ]; then
+            ZIP_FILE="dist.zip"
+            zip -r "$ZIP_FILE" dist-web -x "dist-web/wasm/*" -x "dist-web/class/*"
+
+            if [ -f "$ZIP_FILE" ]; then
+              upload_file "$ZIP_FILE" "application/zip" "📦 Build archive for YukiOS from $SHA ($SUBJECT)"
+            fi
+          fi
+
+      - name: Upload build zips artifact
+        if: env.BUILD_WEB == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-zip
+          path: webos-desktop/*.zip
+          if-no-files-found: ignore
+
+  electron:
+    needs: notify
+    if: needs.notify.outputs.has_changes == 'true' && github.event_name == 'workflow_dispatch'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            target: linux
+            ext: AppImage
+          - os: windows-latest
+            target: win
+            ext: exe
+          - os: macos-latest
+            target: mac
+            ext: dmg
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable pnpm via corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10 --activate
+          pnpm -v
+
+      - name: Install dependencies
+        working-directory: webos-desktop
+        run: pnpm install --frozen-lockfile
+
+      - name: Build web app for Electron
+        working-directory: webos-desktop
+        run: pnpm build:electron
+
+      - name: Build Electron package
+        working-directory: webos-desktop
+        run: pnpm electron:build:${{ matrix.target }}
+
+      - name: Upload electron build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-build-${{ matrix.target }}
+          path: webos-desktop/release/*
+          if-no-files-found: error
+
+  release:
+    needs: [notify, electron]
+    if: needs.notify.outputs.has_changes == 'true' && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download dist.zip
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-zip
+          path: release-files
+
+      - name: Download electron artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: electron-build-*
+          path: release-files
+          merge-multiple: true
+
+      - name: Create release
+        run: |
+          TAG="${{ needs.notify.outputs.tag }}"
+          if [ -z "$TAG" ]; then
+            echo "No tag, skipping release"
+            exit 0
+          fi
+          if [ ! -d release-files ] || [ -z "$(ls -A release-files)" ]; then
+            echo "No release files found, skipping"
+            exit 0
+          fi
+          files=()
+          while IFS= read -r -d '' f; do
+            base=$(basename "$f")
+            case "$base" in
+              builder-debug.yml|latest-linux.yml|latest-mac.yml|latest.yml|*.blockmap) ;;
+              *) files+=("$f") ;;
+            esac
+          done < <(find release-files -maxdepth 1 -type f -print0)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No release files found, skipping"
+            exit 0
+          fi
+          gh release create "$TAG" "${files[@]}" \
+            --title "$TAG" \
+            --generate-notes

@@ -1,0 +1,15 @@
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+release/
+**/release/
+desktop/
+.env
+venv/
+*.pyc
+*.log
+.DS_Store
+webos-desktop/src/generated/*
+!webos-desktop/src/generated/papirus-available.json
+!webos-desktop/src/generated/papirus-symlinks.json
