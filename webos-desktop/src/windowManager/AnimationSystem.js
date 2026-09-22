@@ -226,6 +226,25 @@ function getOpenEndState() {
 }
 
 function getMinimizeEndState(win) {
+  const dockRect = getDockItemRect(win);
+  if (dockRect) {
+    const winRect = win.getBoundingClientRect();
+    const startCX = winRect.left + winRect.width / 2;
+    const startCY = winRect.top + winRect.height / 2;
+    const targetCX = dockRect.left + dockRect.width / 2;
+    const targetCY = dockRect.top + dockRect.height / 2;
+    const dx = targetCX - startCX;
+    const dy = targetCY - startCY;
+    const sx = Math.max(0.05, dockRect.width / (winRect.width || 1));
+    const sy = Math.max(0.05, dockRect.height / (winRect.height || 1));
+    return {
+      transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`,
+      opacity: "0",
+      filter: "none",
+      clipPath: "none",
+      borderRadius: "16px"
+    };
+  }
   const taskbarItem = $(`#taskbar-${win.id}`);
   if (taskbarItem) {
     const winRect = win.getBoundingClientRect();
@@ -265,15 +284,15 @@ export function animateWindowOpen(win, isRestoring = false) {
 export function restoreWindowAnimated(win) {
   if (!win) return;
   const token = ++animToken;
-  win._lastAnimToken = token;
+  win.lastAnimToken = token;
   requestAnimationFrame(() => {
-    if (win._lastAnimToken !== token) return;
+    if (win.lastAnimToken !== token) return;
     animateWindowOpen(win, true);
   });
 }
 
 function playWindowAnimation(win, { mode, isRestoring = false, onDone = null }) {
-  win._lastAnimToken = ++animToken;
+  win.lastAnimToken = ++animToken;
 
   if (mode === "open" && win.style.display === "none") win.style.display = "";
 
@@ -320,9 +339,17 @@ function playWindowAnimation(win, { mode, isRestoring = false, onDone = null }) 
 
     const keyframes = isRestoring ? getRestoreKeyframes(anim, win) : getOpenKeyframes(anim, win, false);
 
+    const isDockOpen = Boolean(getDockItemRect(win)) && (anim === OPEN_ANIMATIONS.scaleFromSource || Boolean($("#mac-dock")));
+    let openEasing = "cubic-bezier(0.16,1,0.3,1)";
+    if (anim === OPEN_ANIMATIONS.elasticBounce) {
+      openEasing = "cubic-bezier(0.34,1.56,0.64,1)";
+    } else if (isDockOpen) {
+      openEasing = "cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+    }
+
     const animation = win.animate(keyframes, {
       duration,
-      easing: anim === OPEN_ANIMATIONS.elasticBounce ? "cubic-bezier(0.34,1.56,0.64,1)" : "cubic-bezier(0.16,1,0.3,1)",
+      easing: openEasing,
       fill: "forwards"
     });
     animation.id = "window-state";
@@ -343,10 +370,17 @@ function playWindowAnimation(win, { mode, isRestoring = false, onDone = null }) 
 
     const keyframes = getMinimizeKeyframes(anim, win);
 
+    const isDockMinimize = Boolean(getDockItemRect(win)) && (anim === MINIMIZE_ANIMATIONS.dockZoomShrink || anim === MINIMIZE_ANIMATIONS.magicLamp);
+    let minimizeEasing = "cubic-bezier(0.3,0,1,1)";
+    if (anim === MINIMIZE_ANIMATIONS.elasticStretch) {
+      minimizeEasing = "cubic-bezier(0.34,1.56,0.64,1)";
+    } else if (isDockMinimize) {
+      minimizeEasing = "cubic-bezier(0.25, 1, 0.5, 1)";
+    }
+
     const animation = win.animate(keyframes, {
       duration,
-      easing:
-        anim === MINIMIZE_ANIMATIONS.elasticStretch ? "cubic-bezier(0.34,1.56,0.64,1)" : "cubic-bezier(0.3,0,1,1)",
+      easing: minimizeEasing,
       fill: "forwards"
     });
     animation.id = "window-state";
@@ -360,6 +394,25 @@ function playWindowAnimation(win, { mode, isRestoring = false, onDone = null }) 
 }
 
 function getOpenKeyframes(animType, win, isRestoring = false) {
+  if (animType === OPEN_ANIMATIONS.scaleFromSource || Boolean($("#mac-dock"))) {
+    const dockRect = getDockItemRect(win);
+    if (dockRect) {
+      const winRect = win.getBoundingClientRect();
+      const startCX = dockRect.left + dockRect.width / 2;
+      const startCY = dockRect.top + dockRect.height / 2;
+      const targetCX = winRect.left + winRect.width / 2;
+      const targetCY = winRect.top + winRect.height / 2;
+      const dx = startCX - targetCX;
+      const dy = startCY - targetCY;
+      const sx = Math.max(0.05, Math.min(0.4, dockRect.width / (winRect.width || 1)));
+      const sy = Math.max(0.05, Math.min(0.4, dockRect.height / (winRect.height || 1)));
+      return [
+        { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, borderRadius: "16px" },
+        { opacity: 1, transform: "translate(0, 0) scale(1)", borderRadius: "10px" }
+      ];
+    }
+  }
+
   switch (animType) {
     case OPEN_ANIMATIONS.fade:
       return [{ opacity: 0 }, { opacity: 1 }];
@@ -368,7 +421,23 @@ function getOpenKeyframes(animType, win, isRestoring = false) {
         { opacity: 0, transform: "scale(0.9)" },
         { opacity: 1, transform: "scale(1)" }
       ];
-    case OPEN_ANIMATIONS.scaleFromSource:
+    case OPEN_ANIMATIONS.scaleFromSource: {
+      const dockRect = getDockItemRect(win);
+      if (dockRect) {
+        const winRect = win.getBoundingClientRect();
+        const startCX = dockRect.left + dockRect.width / 2;
+        const startCY = dockRect.top + dockRect.height / 2;
+        const targetCX = winRect.left + winRect.width / 2;
+        const targetCY = winRect.top + winRect.height / 2;
+        const dx = startCX - targetCX;
+        const dy = startCY - targetCY;
+        const sx = Math.max(0.05, Math.min(0.4, dockRect.width / (winRect.width || 1)));
+        const sy = Math.max(0.05, Math.min(0.4, dockRect.height / (winRect.height || 1)));
+        return [
+          { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, borderRadius: "16px" },
+          { opacity: 1, transform: "translate(0, 0) scale(1)", borderRadius: "10px" }
+        ];
+      }
       if (!isRestoring) {
         return [
           { opacity: 0, transform: "scale(0.9)" },
@@ -389,6 +458,7 @@ function getOpenKeyframes(animType, win, isRestoring = false) {
         { opacity: 0, transform: "scale(0.9)" },
         { opacity: 1, transform: "scale(1)" }
       ];
+    }
     case OPEN_ANIMATIONS.slideUp:
       return [
         { opacity: 0, transform: "translateY(20px)" },
@@ -651,11 +721,28 @@ function getMinimizeKeyframes(animType, win) {
         ];
       }
       return [{ opacity: 1 }, { opacity: 0 }];
-    case MINIMIZE_ANIMATIONS.dockZoomShrink:
+    case MINIMIZE_ANIMATIONS.dockZoomShrink: {
+      const dockRect = getDockItemRect(win);
+      if (dockRect) {
+        const winRect = win.getBoundingClientRect();
+        const startCX = winRect.left + winRect.width / 2;
+        const startCY = winRect.top + winRect.height / 2;
+        const targetCX = dockRect.left + dockRect.width / 2;
+        const targetCY = dockRect.top + dockRect.height / 2;
+        const dx = targetCX - startCX;
+        const dy = targetCY - startCY;
+        const sx = Math.max(0.05, dockRect.width / (winRect.width || 1));
+        const sy = Math.max(0.05, dockRect.height / (winRect.height || 1));
+        return [
+          { opacity: 1, transform: "translate(0, 0) scale(1)", borderRadius: "10px" },
+          { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, borderRadius: "16px" }
+        ];
+      }
       return [
         { opacity: 1, transform: "scale(1)" },
         { opacity: 0, transform: "scale(0)" }
       ];
+    }
     case MINIMIZE_ANIMATIONS.magicLamp: {
       const dockRect = getDockItemRect(win);
       const tbItem = dockRect ? null : $(`#taskbar-${win.id}`);

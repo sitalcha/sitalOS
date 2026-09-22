@@ -1,0 +1,732 @@
+html.kali-mode #taskbar {
+  display: none !important;
+}
+
+html.kali-mode #desktop {
+  top: 30px;
+}
+
+#kali-top-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  z-index: 9998;
+  background: rgba(13, 17, 24, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  box-sizing: border-box;
+  user-select: none;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  color: var(--text-primary, #e6edf3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.kali-panel-left,
+.kali-panel-center,
+.kali-panel-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+}
+
+.kali-panel-center {
+  flex: 1;
+  overflow: hidden;
+  padding: 0 6px;
+}
+
+.kali-panel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text-secondary, #c9d1d9);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.kali-panel-btn:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.3);
+  color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.kali-panel-btn:active {
+  background: rgba(0, 229, 255, 0.22);
+  transform: translateY(1px);
+}
+
+.kali-apps-btn {
+  padding: 0 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 4px;
+}
+
+.kali-apps-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: #00e5ff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+}
+
+.kali-panel-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  object-fit: contain;
+}
+
+.kali-panel-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(0, 229, 255, 0.2);
+  margin: 0 4px;
+}
+
+.kali-ws-btn {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary, #c9d1d9);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.kali-ws-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: rgba(0, 229, 255, 0.35);
+  color: #00e5ff;
+}
+
+.kali-ws-btn.active {
+  background: #00e5ff;
+  color: #090d14;
+  border-color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
+}
+
+.kali-quick-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-secondary, #c9d1d9);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.kali-quick-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border: 1px solid #00e5ff;
+  color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.kali-window-tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.kali-window-tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+.kali-window-tab {
+  height: 24px;
+  max-width: 160px;
+  padding: 0 8px;
+  gap: 6px;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(22, 27, 34, 0.6);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  color: var(--text-secondary, #c9d1d9);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.kali-window-tab:hover {
+  background: rgba(0, 229, 255, 0.08);
+  border-color: rgba(0, 229, 255, 0.25);
+  color: #ffffff;
+}
+
+.kali-window-tab.active {
+  border-bottom: 2px solid #00e5ff;
+  background: rgba(0, 229, 255, 0.12);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.kali-window-tab span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kali-tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  opacity: 0;
+  transition: all 0.15s ease;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-muted, #8b949e);
+}
+
+.kali-window-tab:hover .kali-tab-close {
+  opacity: 1;
+}
+
+.kali-tab-close:hover {
+  color: #ff4d6d;
+  background: rgba(255, 77, 109, 0.2);
+}
+
+.kali-telemetry {
+  font-size: 11px;
+  font-family: "JetBrains Mono", var(--font-mono, monospace);
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 4px;
+  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.2px;
+  user-select: none;
+}
+
+.kali-tray-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #8b949e;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+}
+
+.kali-tray-btn:hover {
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.3);
+}
+
+.kali-power-btn:hover {
+  color: #ff4d6d;
+  background: rgba(255, 77, 109, 0.15);
+  border-color: rgba(255, 77, 109, 0.4);
+  box-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+}
+
+.kali-panel-clock {
+  padding: 0 6px;
+  font-size: 11px;
+  font-family: "JetBrains Mono", var(--font-mono, monospace);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary, #c9d1d9);
+  font-variant-numeric: tabular-nums;
+  cursor: default;
+}
+
+#kali-whisker-menu {
+  position: fixed;
+  top: 34px;
+  left: 6px;
+  width: 600px;
+  height: 460px;
+  z-index: 9999;
+  background: rgba(13, 17, 24, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 229, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--font-ui, system-ui, sans-serif);
+  color: var(--text-primary, #e6edf3);
+  user-select: none;
+  animation: kaliMenuFadeIn 0.18s ease-out;
+}
+
+@keyframes kaliMenuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.kali-whisker-header {
+  position: relative;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  background: rgba(9, 13, 20, 0.6);
+  display: flex;
+  align-items: center;
+}
+
+.kali-whisker-search-icon {
+  position: absolute;
+  left: 24px;
+  color: #00e5ff;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.kali-whisker-search {
+  width: 100%;
+  height: 34px;
+  padding: 0 12px 0 34px;
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.kali-whisker-search:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.4), inset 0 0 6px rgba(0, 229, 255, 0.15);
+}
+
+.kali-whisker-search::placeholder {
+  color: var(--text-muted, #8b949e);
+}
+
+.kali-whisker-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.kali-whisker-sidebar {
+  width: 200px;
+  min-width: 200px;
+  border-right: 1px solid rgba(0, 229, 255, 0.15);
+  background: rgba(10, 14, 20, 0.5);
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kali-whisker-cat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-secondary, #8b949e);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 8px;
+  border-left: 2px solid transparent;
+}
+
+.kali-whisker-cat-item:hover {
+  background: rgba(0, 229, 255, 0.1);
+  color: #ffffff;
+}
+
+.kali-whisker-cat-item.active {
+  background: rgba(0, 229, 255, 0.18);
+  color: #00e5ff;
+  font-weight: 600;
+  border-left: 2px solid #00e5ff;
+}
+
+.kali-whisker-cat-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kali-whisker-cat-num {
+  font-family: "JetBrains Mono", var(--font-mono, monospace);
+  font-size: 10px;
+  color: rgba(0, 229, 255, 0.7);
+  background: rgba(0, 229, 255, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.kali-whisker-tools {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kali-whisker-tool-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.kali-whisker-tool-item:hover {
+  background: rgba(0, 229, 255, 0.1);
+  border-color: rgba(0, 229, 255, 0.25);
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.kali-whisker-tool-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+  color: #00e5ff;
+}
+
+.kali-whisker-tool-icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.kali-whisker-tool-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  gap: 2px;
+}
+
+.kali-whisker-tool-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f0f6fc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kali-whisker-tool-desc {
+  font-size: 11px;
+  color: var(--text-muted, #8b949e);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kali-whisker-footer {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border-top: 1px solid rgba(0, 229, 255, 0.15);
+  background: rgba(9, 13, 20, 0.8);
+}
+
+.kali-whisker-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "JetBrains Mono", var(--font-mono, monospace);
+  font-size: 11px;
+  color: #00e5ff;
+}
+
+.kali-whisker-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kali-whisker-action-btn {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted, #8b949e);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  outline: none;
+  font-size: 12px;
+}
+
+.kali-whisker-action-btn:hover {
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.3);
+}
+
+.kali-whisker-action-btn.power:hover {
+  color: #ff4d6d;
+  background: rgba(255, 77, 109, 0.15);
+  border-color: rgba(255, 77, 109, 0.4);
+}
+
+#kali-dock {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 42px;
+  z-index: 9998;
+  background: rgba(13, 17, 24, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 6px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 16px rgba(0, 229, 255, 0.15);
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.kali-dock-pinned,
+.kali-dock-tasks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+}
+
+.kali-dock-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(0, 229, 255, 0.25);
+  margin: 0 2px;
+}
+
+.kali-dock-item {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: var(--text-secondary, #c9d1d9);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.18s ease;
+  outline: none;
+  padding: 0;
+}
+
+.kali-dock-item:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: rgba(0, 229, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(0, 229, 255, 0.25);
+}
+
+.kali-dock-item:active {
+  transform: translateY(0);
+}
+
+.kali-dock-item.kali-cyan-accent {
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3), inset 0 0 8px rgba(0, 229, 255, 0.15);
+}
+
+.kali-dock-item.kali-cyan-accent:hover {
+  border-color: #00e5ff;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.5), inset 0 0 10px rgba(0, 229, 255, 0.25);
+}
+
+.kali-app-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  object-fit: contain;
+}
+
+.kali-dock-item i {
+  font-size: 15px;
+}
+
+.kali-dock-task-btn {
+  height: 30px;
+  min-width: 110px;
+  max-width: 160px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 6px;
+  color: var(--text-secondary, #c9d1d9);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+  outline: none;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.kali-dock-task-btn:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.4);
+  color: #ffffff;
+}
+
+.kali-dock-task-btn.active {
+  background: rgba(0, 229, 255, 0.18);
+  border-color: #00e5ff;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+}
+
+.kali-dock-task-btn.minimized {
+  opacity: 0.65;
+}
+
+.kali-dock-task-title {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kali-dock-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0, 229, 255, 0.3);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.kali-dock-task-btn.active .kali-dock-dot {
+  background: #00e5ff;
+  box-shadow: 0 0 8px #00e5ff;
+}
+
+html.kali-mode .window {
+  border: 1px solid rgba(0, 229, 255, 0.25) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 1px rgba(0, 229, 255, 0.3) !important;
+}
+
+html.kali-mode .window.active {
+  border: 1px solid rgba(0, 229, 255, 0.45) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 229, 255, 0.2) !important;
+}
+
+html.kali-mode .window .window-header {
+  background: #10141d !important;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2) !important;
+}
+
+html.kali-mode .window.active .window-header {
+  border-bottom: 1px solid rgba(0, 229, 255, 0.45) !important;
+}
+
+html.kali-mode .window .win-btn {
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+
+html.kali-mode .window .win-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+  color: #00e5ff;
+}
+
+html.kali-mode .window .win-btn.close-btn:hover {
+  background: rgba(255, 77, 109, 0.25);
+  color: #ff4d6d;
+}

@@ -835,9 +835,9 @@ body.is-resizing * {
 }
 
 .window-controls.mac-controls button {
-  width: 13px;
-  height: 13px;
-  border-radius: 25px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
   background: transparent;
   padding: 0;
   flex-shrink: 0;
@@ -850,7 +850,7 @@ body.is-resizing * {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 25px;
+  border-radius: 50%;
   opacity: 0;
   transition: opacity 0.15s;
   background-image: var(--mac-icon);
@@ -1070,10 +1070,18 @@ html[data-theme="light"] .window {
 }
 
 .window-header.mac-header {
-  grid-template-columns: auto 1fr;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   position: relative;
 }
 .window-header.mac-header > .window-controls {
+  order: -1;
+  margin-right: auto;
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding-left: 4px;
 }
 .window-header.mac-header > span {

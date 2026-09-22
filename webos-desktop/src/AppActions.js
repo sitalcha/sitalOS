@@ -12,6 +12,7 @@ export function createAppActions(appLauncher) {
     const { launchType, source, title, launchMethod } = metadata;
 
     switch (launchType) {
+      case "singleton":
       case "instance":
         actions[appId] = (extra) => {
           if (appId === "taskManagerApp") {

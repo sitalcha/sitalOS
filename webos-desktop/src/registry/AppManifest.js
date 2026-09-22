@@ -41,6 +41,17 @@ export const APP_MANIFESTS = [
     description: "Access webcam for photo capture with basic image controls and save to filesystem."
   },
   {
+    serviceKey: "musicPlayerApp",
+    enhanced: true,
+    type: "system",
+    title: "Music",
+    icon: "papirus:apps/multimedia-audio-player",
+    launchType: "singleton",
+    windowIdPatterns: ["music-player"],
+    category: "media",
+    description: "Listen to music tracks with playback controls playlist queue and media session integration."
+  },
+  {
     serviceKey: "aboutApp",
     enhanced: false,
     type: "system",
@@ -94,11 +105,10 @@ export const APP_MANIFESTS = [
     type: "system",
     title: "Kagaj AI",
     icon: "papirus:apps/brainstorm",
-    targetUrl: "https://sitalc.com.np/",
     launchType: "instance",
     windowIdPatterns: ["kagaj-ai"],
     category: "office",
-    description: "AI based document and PDF assistant."
+    description: "AI based document and PDF handwriting and text extractor."
   },
   {
     serviceKey: "newsApp",

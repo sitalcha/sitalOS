@@ -40,13 +40,17 @@ import { $, createElement } from "./shared/domUtils.js";
 import { StorageKeys } from "./StorageKeys.js";
 import { ServiceKeys } from "./ServiceKeys.js";
 import { showBootScreen } from "./bootScreen.js";
-import { deckCapture } from "./modes/steamdeck/deckCapture.js";
 import { initPopunder } from "./ads.js";
 import { bus } from "./core/EventBus.js";
 import { trayManager } from "./tray/tray.js";
 import { MacControlCenter } from "./modes/macos/ControlCenter.js";
 import { MenuBarManager } from "./modes/macos/MenuBarManager.js";
 import { applyStartButtonIcon } from "./desktopui/startButtonManager.js";
+import { initDeviceDetector } from "./mobile/deviceDetector.js";
+import { initGestureManager } from "./mobile/gestureManager.js";
+import { initMobileShell } from "./mobile/MobileShell.js";
+import { initTabletManager } from "./mobile/tabletManager.js";
+import "./mobile/mobileShell.css";
 
 registerPWA();
 
@@ -85,7 +89,11 @@ os.clipboardManager = clipboardManager;
 new MacControlCenter();
 init();
 window.os = os;
-deckCapture.install();
+
+initDeviceDetector(bus);
+initGestureManager(os);
+initMobileShell(os);
+initTabletManager(os);
 
 const boot = showBootScreen();
 
@@ -281,8 +289,8 @@ async function start() {
             if (active.length === 0) return "normal";
             const m = active[0];
             if (m === MODES.MAC) return "mac";
-            if (m === MODES.TILING) return "tiling";
             if (m === MODES.CHROME_OS) return "chromeos";
+            if (m === MODES.KALI) return "kali";
             return m;
           };
 
@@ -328,7 +336,7 @@ async function start() {
               }
               case "set-session-mode": {
                 modeManager.exitAll();
-                const modeMap = { mac: MODES.MAC, chromeos: MODES.CHROME_OS, tiling: MODES.TILING };
+                const modeMap = { mac: MODES.MAC, chromeos: MODES.CHROME_OS, kali: MODES.KALI };
                 const modeId = modeMap[value];
                 if (modeId) modeManager.enter(modeId);
                 window.electronAPI.sendTrayState({ sessionMode: value });

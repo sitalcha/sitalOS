@@ -1,0 +1,284 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <radialGradient id="bgAmbient" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.18"/>
+      <stop offset="30%" stop-color="#0055ff" stop-opacity="0.10"/>
+      <stop offset="65%" stop-color="#080b11" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#080b11" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="dragonAura" cx="50%" cy="43%" r="35%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.25"/>
+      <stop offset="45%" stop-color="#0055ff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#080b11" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vignette" cx="50%" cy="50%" r="75%">
+      <stop offset="55%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#04060a" stop-opacity="0.85"/>
+    </radialGradient>
+    <linearGradient id="gText" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#e0f9ff"/>
+      <stop offset="100%" stop-color="#00e5ff"/>
+    </linearGradient>
+    <linearGradient id="fCyanBright" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#70ffff"/>
+      <stop offset="100%" stop-color="#00e5ff"/>
+    </linearGradient>
+    <linearGradient id="fCyanMid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#0099cc"/>
+    </linearGradient>
+    <linearGradient id="fCyanBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00c8e6"/>
+      <stop offset="100%" stop-color="#0055ff"/>
+    </linearGradient>
+    <linearGradient id="fBlueNeon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0066ff"/>
+      <stop offset="100%" stop-color="#0033aa"/>
+    </linearGradient>
+    <linearGradient id="fBlueDeep" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d284d"/>
+      <stop offset="100%" stop-color="#061326"/>
+    </linearGradient>
+    <linearGradient id="fBlueDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#081b33"/>
+      <stop offset="100%" stop-color="#030a14"/>
+    </linearGradient>
+    <linearGradient id="fBlueMedium" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f3b75"/>
+      <stop offset="100%" stop-color="#092042"/>
+    </linearGradient>
+    <linearGradient id="fHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="fGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffff"/>
+      <stop offset="100%" stop-color="#0066ff"/>
+    </linearGradient>
+    <pattern id="hexGrid" width="48" height="83.138" patternUnits="userSpaceOnUse">
+      <path d="M 24,0 L 48,13.856 L 48,41.569 L 24,55.426 L 0,41.569 L 0,13.856 Z" fill="none" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.035"/>
+      <path d="M 24,83.138 L 48,69.282 L 48,41.569 L 24,55.426 L 0,41.569 L 0,69.282 Z" fill="none" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.035"/>
+    </pattern>
+    <pattern id="cyberGrid" width="160" height="160" patternUnits="userSpaceOnUse">
+      <path d="M 160 0 L 0 0 0 160" fill="none" stroke="#0055ff" stroke-width="0.5" stroke-opacity="0.05"/>
+      <circle cx="0" cy="0" r="1.5" fill="#00e5ff" fill-opacity="0.12"/>
+    </pattern>
+    <filter id="cyanGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur1"/>
+      <feGaussianBlur stdDeviation="20" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="eyeGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#080b11"/>
+  <rect width="1920" height="1080" fill="url(#hexGrid)"/>
+  <rect width="1920" height="1080" fill="url(#cyberGrid)"/>
+  <rect width="1920" height="1080" fill="url(#bgAmbient)"/>
+  <rect width="1920" height="1080" fill="url(#dragonAura)"/>
+
+  <g opacity="0.25">
+    <circle cx="960" cy="440" r="460" fill="none" stroke="#00e5ff" stroke-width="1" stroke-dasharray="8 16"/>
+    <circle cx="960" cy="440" r="380" fill="none" stroke="#0055ff" stroke-width="1" stroke-dasharray="16 24"/>
+    <circle cx="960" cy="440" r="300" fill="none" stroke="#00e5ff" stroke-width="0.75" stroke-dasharray="4 8"/>
+    <circle cx="960" cy="440" r="220" fill="none" stroke="#0055ff" stroke-width="0.5"/>
+    <line x1="960" y1="20" x2="960" y2="120" stroke="#00e5ff" stroke-width="1" stroke-opacity="0.4"/>
+    <line x1="960" y1="760" x2="960" y2="860" stroke="#00e5ff" stroke-width="1" stroke-opacity="0.4"/>
+    <line x1="480" y1="440" x2="580" y2="440" stroke="#00e5ff" stroke-width="1" stroke-opacity="0.4"/>
+    <line x1="1340" y1="440" x2="1440" y2="440" stroke="#00e5ff" stroke-width="1" stroke-opacity="0.4"/>
+  </g>
+
+  <g opacity="0.4">
+    <path d="M 60 60 L 100 60 M 60 60 L 60 100" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+    <path d="M 1860 60 L 1820 60 M 1860 60 L 1860 100" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+    <path d="M 60 1020 L 100 1020 M 60 1020 L 60 980" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+    <path d="M 1860 1020 L 1820 1020 M 1860 1020 L 1860 980" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+    <text x="120" y="85" font-family="'JetBrains Mono', monospace" font-size="11" fill="#00e5ff" letter-spacing="3" opacity="0.6">SYS_ARCH: X86_64 // CYBER_CORE</text>
+    <text x="1800" y="85" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#00e5ff" letter-spacing="3" opacity="0.6">BUILD: 2025.1-RELEASE</text>
+    <text x="120" y="1005" font-family="'JetBrains Mono', monospace" font-size="11" fill="#00e5ff" letter-spacing="3" opacity="0.6">SEC_MODE: ENFORCING</text>
+    <text x="1800" y="1005" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="11" fill="#00e5ff" letter-spacing="3" opacity="0.6">KALI_OFFICIAL_EDITION</text>
+  </g>
+
+  <g id="kaliDragon" transform="translate(0, -10)">
+    <g id="backWing" opacity="0.85">
+      <polygon points="880,310 825,235 770,255" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="880,310 770,255 810,325" fill="url(#fBlueDeep)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="770,255 725,285 765,340" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="770,255 765,340 810,325" fill="url(#fBlueMedium)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="725,285 700,335 745,365" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="725,285 745,365 765,340" fill="url(#fBlueDeep)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="810,325 765,340 835,375" fill="url(#fBlueMedium)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="765,340 745,365 805,395" fill="url(#fBlueDeep)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="765,340 805,395 835,375" fill="url(#fBlueMedium)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+    </g>
+
+    <g id="serpentineTail">
+      <polygon points="870,685 815,715 845,665" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="815,715 765,690 845,665" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="765,690 735,640 790,640" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="765,690 845,665 790,640" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="735,640 710,580 755,600" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="735,640 755,600 790,640" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="710,580 670,550 705,550" fill="url(#fCyanBright)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="710,580 705,550 755,600" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="670,550 635,510 680,520" fill="url(#fCyanBright)" stroke="#ffffff" stroke-width="1" stroke-opacity="0.8" filter="url(#cyanGlow)"/>
+      <polygon points="670,550 680,520 705,550" fill="url(#fCyanBright)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.7"/>
+      <polygon points="635,510 680,520 660,480" fill="url(#fHighlight)" stroke="#ffffff" stroke-width="1.2" filter="url(#cyanGlow)"/>
+    </g>
+
+    <g id="dragonTorso">
+      <polygon points="875,425 895,455 855,480" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="895,455 885,510 855,480" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="895,455 930,490 885,510" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="885,510 930,490 925,545" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="885,510 925,545 865,545" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="865,545 925,545 885,595" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="865,545 885,595 835,580" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="885,595 915,640 870,685" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="885,595 870,685 835,640" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="835,580 885,595 835,640" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+    </g>
+
+    <g id="dragonClaw">
+      <polygon points="925,545 970,560 945,590" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="970,560 1015,550 990,575" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="970,560 990,575 945,590" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1015,550 1050,540 1030,560" fill="url(#fCyanBright)" stroke="#ffffff" stroke-width="0.8" stroke-opacity="0.9"/>
+      <polygon points="1015,550 1030,560 990,575" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="990,575 1040,575 1010,595" fill="url(#fCyanBright)" stroke="#ffffff" stroke-width="0.8" stroke-opacity="0.9"/>
+      <polygon points="990,575 1010,595 965,605" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="945,590 990,575 965,605" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="965,605 1020,615 985,625" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="965,605 985,625 945,615" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+    </g>
+
+    <g id="dragonNeck">
+      <polygon points="940,355 965,345 950,385" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="965,345 975,375 950,385" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="940,355 950,385 915,415" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="940,355 915,415 905,385" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="905,385 915,415 895,455" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="905,385 895,455 875,425" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+    </g>
+
+    <g id="dragonHead">
+      <polygon points="975,335 960,270 945,290" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="975,335 945,290 965,345" fill="url(#fBlueDark)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="960,270 925,230 935,270" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="960,270 935,270 945,290" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="925,230 910,210 920,240" fill="url(#fCyanBright)" stroke="#ffffff" stroke-width="1" stroke-opacity="0.8" filter="url(#cyanGlow)"/>
+      <polygon points="975,335 1010,335 995,350" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="975,335 995,350 965,345" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1010,335 1055,330 1025,355" fill="url(#fCyanBright)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.7"/>
+      <polygon points="1010,335 1025,355 995,350" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="1055,330 1080,345 1040,360" fill="url(#fHighlight)" stroke="#ffffff" stroke-width="0.9" stroke-opacity="0.9"/>
+      <polygon points="1055,330 1040,360 1025,355" fill="url(#fCyanBright)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.7"/>
+      <polygon points="1040,360 1070,368 1025,375" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="1025,355 1040,360 1005,370" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1040,360 1025,375 1005,370" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="995,350 1025,355 1005,370" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="995,350 1005,370 965,345" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1005,370 1025,375 985,385" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="965,345 1005,370 975,375" fill="url(#fBlueDeep)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="1008,342 1016,345 1010,348 1003,345" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5" filter="url(#eyeGlow)"/>
+    </g>
+
+    <g id="mainWing">
+      <polygon points="950,410 1030,370 1020,400" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="950,410 1020,400 940,445" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1030,370 1130,290 1085,335" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="1030,370 1085,335 1020,400" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1130,290 1160,250 1135,295" fill="url(#fHighlight)" stroke="#ffffff" stroke-width="1" filter="url(#cyanGlow)"/>
+      <polygon points="1130,290 1245,220 1180,275" fill="url(#fCyanBright)" stroke="#ffffff" stroke-width="0.8" stroke-opacity="0.9"/>
+      <polygon points="1130,290 1180,275 1110,320" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="1085,335 1130,290 1110,320" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1180,275 1245,220 1205,280" fill="url(#fHighlight)" stroke="#ffffff" stroke-width="1" filter="url(#cyanGlow)"/>
+      <polygon points="1180,275 1205,280 1160,325" fill="url(#fCyanBright)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.7"/>
+      <polygon points="1110,320 1180,275 1160,325" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="1110,320 1160,325 1075,360" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1085,335 1110,320 1075,360" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1020,400 1085,335 1075,360" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1160,325 1205,280 1280,305" fill="url(#fCyanBright)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.7"/>
+      <polygon points="1160,325 1280,305 1220,345" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="1160,325 1220,345 1145,375" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1075,360 1160,325 1145,375" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1075,360 1145,375 1040,410" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1020,400 1075,360 1040,410" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1145,375 1220,345 1265,385" fill="url(#fCyanMid)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.6"/>
+      <polygon points="1145,375 1265,385 1195,405" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1145,375 1195,405 1120,430" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1040,410 1145,375 1120,430" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1040,410 1120,430 1010,460" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="940,445 1020,400 1040,410" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="940,445 1040,410 1010,460" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+      <polygon points="1120,430 1195,405 1215,465" fill="url(#fCyanBlue)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1120,430 1215,465 1145,455" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1120,430 1145,455 1075,480" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1010,460 1120,430 1075,480" fill="url(#fBlueDeep)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1075,480 1145,455 1135,515" fill="url(#fBlueNeon)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.5"/>
+      <polygon points="1075,480 1135,515 1060,490" fill="url(#fBlueMedium)" stroke="#00e5ff" stroke-width="0.75" stroke-opacity="0.4"/>
+      <polygon points="1010,460 1075,480 1060,490" fill="url(#fBlueDark)" stroke="#0055ff" stroke-width="0.75" stroke-opacity="0.3"/>
+    </g>
+
+    <g id="dragonHighlights" stroke="#00e5ff" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.8">
+      <path d="M 1245,220 L 1130,290 L 1030,370 L 950,410"/>
+      <path d="M 1205,280 L 1160,325 L 1075,360 L 1040,410"/>
+      <path d="M 1280,305 L 1220,345 L 1145,375 L 1120,430"/>
+      <path d="M 1265,385 L 1195,405 L 1215,465"/>
+      <path d="M 960,270 L 925,230 L 910,210"/>
+      <path d="M 1010,335 L 1055,330 L 1080,345"/>
+      <path d="M 670,550 L 635,510 L 660,480"/>
+      <path d="M 1015,550 L 1050,540"/>
+      <path d="M 990,575 L 1040,575"/>
+      <path d="M 965,605 L 1020,615"/>
+    </g>
+
+    <g id="dragonNodes" fill="#00e5ff" filter="url(#cyanGlow)">
+      <circle cx="1245" cy="220" r="3"/>
+      <circle cx="1280" cy="305" r="2.5"/>
+      <circle cx="1265" cy="385" r="2.5"/>
+      <circle cx="1215" cy="465" r="2"/>
+      <circle cx="1135" cy="515" r="2"/>
+      <circle cx="910" cy="210" r="2.5"/>
+      <circle cx="1080" cy="345" r="2.5"/>
+      <circle cx="635" cy="510" r="3"/>
+      <circle cx="1050" cy="540" r="2"/>
+      <circle cx="1040" cy="575" r="2"/>
+      <circle cx="1020" cy="615" r="2"/>
+    </g>
+  </g>
+
+  <g id="typography">
+    <text x="960" y="805" text-anchor="middle" font-family="'JetBrains Mono', 'Segoe UI', system-ui, sans-serif" font-size="44" font-weight="900" letter-spacing="18" fill="url(#gText)" filter="url(#softGlow)">KALI LINUX</text>
+
+    <g opacity="0.6">
+      <line x1="580" y1="835" x2="880" y2="835" stroke="#00e5ff" stroke-width="1"/>
+      <polygon points="960,830 965,835 960,840 955,835" fill="#00e5ff" filter="url(#cyanGlow)"/>
+      <line x1="1040" y1="835" x2="1340" y2="835" stroke="#00e5ff" stroke-width="1"/>
+      <circle cx="580" cy="835" r="2" fill="#00e5ff"/>
+      <circle cx="1340" cy="835" r="2" fill="#00e5ff"/>
+    </g>
+
+    <text x="960" y="870" text-anchor="middle" font-family="'JetBrains Mono', 'Segoe UI', monospace, sans-serif" font-size="12" font-weight="600" letter-spacing="7" fill="#00e5ff" opacity="0.85">THE QUIETER YOU BECOME, THE MORE YOU ARE ABLE TO HEAR</text>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#vignette)"/>
+</svg>

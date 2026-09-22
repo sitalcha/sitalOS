@@ -108,7 +108,7 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
-      additionalArguments: [`--yukios-dev=${!app.isPackaged}`]
+      additionalArguments: [`--sitalos-dev=${!app.isPackaged}`]
     },
     icon: ICON_PATH
   });
@@ -649,7 +649,7 @@ let trayState = {
 function setupTray() {
   const iconPath = TRAY_ICON_PATH;
   tray = new Tray(nativeImage.createFromPath(iconPath));
-  tray.setToolTip("YukiOS");
+  tray.setToolTip("sitalOS");
 
   rebuildTrayMenu = () => {
     const autostart = app.getLoginItemSettings().openAtLogin;
@@ -803,14 +803,14 @@ function setupTray() {
       },
       { type: "separator" },
       {
-        label: "Show YukiOS",
+        label: "Show sitalOS",
         click: () => {
           mainWindow.show();
           mainWindow.focus();
         }
       },
       {
-        label: "Quit YukiOS",
+        label: "Quit sitalOS",
         click: () => {
           app.isQuitting = true;
           app.quit();

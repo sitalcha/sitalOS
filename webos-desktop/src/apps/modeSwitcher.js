@@ -14,8 +14,8 @@ import {
 } from "../framework.js";
 import { applyMacSettings, disableMacSettings } from "../modes/macos/session.js";
 import { applyChromeOsSettings, disableChromeOsSettings } from "../modes/chromeos/session.js";
-import { applyTilingSettings, disableTilingSettings } from "../modes/tiling/session.js";
-import { applySteamDeckSettings, disableSteamDeckSettings } from "../modes/steamdeck/session.js";
+import { applyKaliSettings, disableKaliSettings } from "../modes/kali/session.js";
+import { playOsBootSplash } from "../modes/shared/osBootSplash.js";
 import { SystemUtilities } from "../system.js";
 import sitalPhoto from "../assets/sital-photo.jpg";
 
@@ -28,9 +28,8 @@ let switcher = null;
 const MODES = [
   { label: "sitalOS", img: sitalPhoto, mode: "reset", description: "Default desktop experience" },
   { label: "MacOS", icon: "fab fa-apple", mode: "mac", description: "Mac-style desktop with dock" },
-  { label: "SteamDeck", icon: "fas fa-gamepad", mode: "steamdeck", description: "Steam Deck gaming interface" },
   { label: "ChromeOS", icon: "fab fa-chrome", mode: "chromeos", description: "Chromebook-style desktop" },
-  { label: "Tiling", icon: "fas fa-th-large", mode: "tiling", description: "Tiling window manager" }
+  { label: "Kali Linux", icon: "fas fa-shield-alt", mode: "kali", description: "Offensive security pentest desktop" }
 ];
 
 function runSwitcher() {
@@ -126,18 +125,15 @@ function enterPreviewMode(mode) {
     applyMacSettings();
   } else if (mode === "chromeos") {
     applyChromeOsSettings();
-  } else if (mode === "tiling") {
-    applyTilingSettings();
-  } else if (mode === "steamdeck") {
-    applySteamDeckSettings();
+  } else if (mode === "kali") {
+    applyKaliSettings();
   }
 }
 
 function disablePreviewModes() {
   disableMacSettings();
-  disableTilingSettings();
   disableChromeOsSettings();
-  disableSteamDeckSettings();
+  disableKaliSettings();
 }
 
 function restorePreviewWallpaper() {
@@ -150,7 +146,10 @@ function restorePreviewWallpaper() {
   }
 }
 
-function applyModePermanently(mode) {
+async function applyModePermanently(mode) {
+  if (mode === "mac" || mode === "kali") {
+    await playOsBootSplash(mode);
+  }
   if (mode === "reset") {
     disablePreviewModes();
     restorePreviewWallpaper();

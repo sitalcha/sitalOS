@@ -1,5 +1,112 @@
 [
   {
+    "date": "September 2026",
+    "label": "Kagaj AI Native",
+    "sections": [
+      {
+        "icon": "papirus:apps/brainstorm",
+        "title": "Kagaj AI Document Assistant",
+        "items": [
+          ["papirus:apps/brainstorm", "Native Document Extraction", "Extract text and tables from PDFs and images directly using Gemini AI."]
+        ]
+      }
+    ]
+  },
+  {
+    "date": "September 2026",
+    "label": "Native Android 14 and Mobile Multi-Shell",
+    "sections": [
+      {
+        "icon": "fa-mobile-screen",
+        "title": "Mobile Multi-Shell Experience",
+        "items": [
+          ["fa-palette", "Material You Pixel Shell", "Experience adaptive squircles, dynamic color theming, and an authentic Pixel search pill."],
+          ["fa-terminal", "Kali NetHunter Mobile Shell", "Deploy cyber offensive tools, a live terminal card, and quick network toggles."],
+          ["fa-tablet-screen-button", "ChromeOS Tablet Mode", "Enjoy full screen launcher grids, touch shelf navigation, and streamlined quick settings."],
+          ["fa-hand-pointer", "Android Gestures", "Navigate fluidly with back arrow indicators and smooth swipe up home gestures."]
+        ]
+      }
+    ]
+  },
+  {
+    "date": "September 2026",
+    "label": "Music Player and Mobile System",
+    "sections": [
+      {
+        "icon": "fa-music",
+        "title": "Music and Mobile Updates",
+        "items": [
+          ["fa-lock", "Mobile Lock Screen", "Swipe up on the lock screen with real time clock and notifications."],
+          ["fa-table-cells", "Slide Up App Drawer", "Pull up the app drawer to search and launch installed applications instantly."],
+          ["fa-music", "Spotify Music Player", "Enjoy full media session support and seamless background playback with rich album art."],
+          ["fa-play", "macOS Music Widget", "Control tracks and preview album art directly from your interactive desktop widget."]
+        ]
+      }
+    ]
+  },
+  {
+    "date": "September 2026",
+    "label": "macOS Window Animations",
+    "sections": [
+      {
+        "icon": "fa-window-restore",
+        "title": "macOS Window Animations",
+        "items": [
+          ["fa-arrow-up-right-from-square", "Dock App Launch", "Launch apps with fluid spring scale animations directly from their dock icons."],
+          ["fa-down-left-and-up-right-to-center", "Dock Minimization", "Minimize windows smoothly down into the dock with natural deceleration curves."]
+        ]
+      }
+    ]
+  },
+  {
+    "date": "September 2026",
+    "label": "macOS Side Widgets",
+    "sections": [
+      {
+        "icon": "fa-table-columns",
+        "title": "macOS Desktop Experience",
+        "items": [
+          ["fa-table-columns", "Customizable Side Widgets", "Place interactive clocks calendars weather and telemetry cards on your desktop."],
+          ["fa-arrows-up-down-left-right", "Drag Reordering", "Rearrange your side widgets effortlessly with smooth drag and drop reordering."],
+          ["fa-magnifying-glass", "Fisheye Magnification", "Hover over dock icons to experience fluid magnification with smooth spring animations."],
+          ["fa-sliders", "Live Widget Gallery", "Add or remove desktop widgets anytime using the interactive widget gallery."]
+        ]
+      }
+    ]
+  },
+  {
+    "date": "September 2026",
+    "label": "Native Mobile UI",
+    "sections": [
+      {
+        "icon": "fa-mobile-screen-button",
+        "title": "Native Mobile Experience",
+        "items": [
+          ["fa-mobile-screen", "Full Screen Apps", "Run every application seamlessly in full screen with native navigation controls."],
+          ["fa-hand-pointer", "Touch Gestures", "Navigate effortlessly using intuitive edge swipe and home gesture controls."],
+          ["fa-table-cells", "Custom Mobile Shells", "Switch between unique mobile launchers designed for each operating system mode."],
+          ["fa-download", "Standalone PWA", "Install sitalOS directly onto your home screen for an authentic native feel."]
+        ]
+      }
+    ]
+  },
+  {
+    "date": "September 2026",
+    "label": "Modern Kali Linux",
+    "sections": [
+      {
+        "icon": "fa-dragon",
+        "title": "Modern Kali Linux UI",
+        "items": [
+          ["fa-desktop", "XFCE Top Panel", "Experience the classic cyber panel with workspaces, tabs, and quick launchers."],
+          ["fa-th-large", "Whisker Tools Menu", "Search security tools and launch apps quickly in the categorized cyber menu."],
+          ["fa-microchip", "Live Telemetry", "Monitor system CPU and memory stats directly in the top panel."],
+          ["fa-dragon", "Geometric Dragon Wallpaper", "Enjoy the sleek modern 2025 faceted cyber dragon desktop artwork."]
+        ]
+      }
+    ]
+  },
+  {
     "date": "September 13, 2026",
     "label": "Papirus Icons",
     "sections": [

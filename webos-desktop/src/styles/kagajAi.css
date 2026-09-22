@@ -1,0 +1,789 @@
+:root {
+  --kagaj-bg-card: rgba(17, 24, 39, 0.7);
+  --kagaj-bg-glass: rgba(255, 255, 255, 0.03);
+  --kagaj-border-glass: rgba(255, 255, 255, 0.08);
+  --kagaj-accent: #6366f1;
+  --kagaj-accent-light: #818cf8;
+  --kagaj-accent-glow: rgba(99, 102, 241, 0.3);
+  --kagaj-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+}
+
+.kagaj-ai-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background: var(--bg-base, #0a0e1a);
+  color: var(--text-primary, #f1f5f9);
+  position: relative;
+}
+
+.kagaj-header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 1.8rem 1rem 1.2rem;
+  flex-shrink: 0;
+}
+
+.kagaj-title {
+  font-size: 2rem;
+  font-weight: 800;
+  background: var(--kagaj-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.kagaj-subtitle {
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.kagaj-model-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+  padding: 0.35rem 0.9rem;
+  background: var(--kagaj-bg-glass);
+  border: 1px solid var(--kagaj-border-glass);
+  border-radius: var(--r-full, 50px);
+  font-size: 0.75rem;
+  color: var(--kagaj-accent-light);
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.kagaj-model-badge:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--brand, #6366f1);
+}
+
+.kagaj-model-badge .dot,
+.kagaj-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--status-online, #10b981);
+  animation: kagajPulse 2s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes kagajPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.kagaj-key-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.8rem;
+  margin-left: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  background: var(--kagaj-bg-glass);
+  border: 1px solid var(--kagaj-border-glass);
+  border-radius: var(--r-full, 50px);
+  font-size: 0.75rem;
+  color: var(--kagaj-accent-light);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kagaj-key-btn:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--brand, #6366f1);
+}
+
+.kagaj-main-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.kagaj-main-container .left-column,
+.kagaj-main-container .right-column,
+.kagaj-left-column,
+.kagaj-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.kagaj-card {
+  background: var(--kagaj-bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--kagaj-border-glass);
+  border-radius: var(--r-xl, 16px);
+  padding: 1.5rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.kagaj-card:hover {
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+.kagaj-card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kagaj-card-title .icon {
+  font-size: 1rem;
+}
+
+.kagaj-upload-zone {
+  border: 2px dashed rgba(99, 102, 241, 0.25);
+  border-radius: var(--r-lg, 12px);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--kagaj-bg-glass);
+  position: relative;
+  overflow: hidden;
+}
+
+.kagaj-upload-zone:hover {
+  border-color: var(--brand, #6366f1);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.kagaj-upload-zone.dragover {
+  border-color: var(--kagaj-accent-light);
+  background: rgba(99, 102, 241, 0.08);
+  transform: scale(1.01);
+}
+
+.kagaj-upload-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.kagaj-upload-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary, #94a3b8);
+  font-weight: 500;
+}
+
+.kagaj-upload-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted, #64748b);
+  margin-top: 0.4rem;
+}
+
+.kagaj-file-input {
+  display: none;
+}
+
+.kagaj-file-info {
+  display: none;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1rem;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: var(--r, 10px);
+  margin-top: 1rem;
+}
+
+.kagaj-file-info.visible {
+  display: flex;
+}
+
+.kagaj-file-info .file-icon,
+.kagaj-file-icon {
+  font-size: 1.5rem;
+}
+
+.kagaj-file-info .file-name,
+.kagaj-file-name {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary, #f1f5f9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kagaj-file-info .file-size,
+.kagaj-file-size {
+  font-size: 0.75rem;
+  color: var(--text-muted, #64748b);
+  white-space: nowrap;
+}
+
+.kagaj-file-info .remove-btn,
+.kagaj-remove-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.2rem;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.kagaj-file-info .remove-btn:hover,
+.kagaj-remove-btn:hover {
+  color: var(--error, #ef4444);
+}
+
+.kagaj-prompt-section {
+  margin-top: 1rem;
+}
+
+.kagaj-prompt-label {
+  font-size: 0.78rem;
+  color: var(--text-muted, #64748b);
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  display: block;
+}
+
+.kagaj-prompt-textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 0.8rem 1rem;
+  background: var(--kagaj-bg-glass);
+  border: 1px solid var(--kagaj-border-glass);
+  border-radius: var(--r, 10px);
+  color: var(--text-primary, #f1f5f9);
+  font-family: inherit;
+  font-size: 0.85rem;
+  resize: vertical;
+  transition: border-color 0.3s;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.kagaj-prompt-textarea:focus {
+  border-color: var(--brand, #6366f1);
+}
+
+.kagaj-prompt-textarea::placeholder {
+  color: var(--text-muted, #64748b);
+}
+
+.kagaj-extract-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.85rem 1.5rem;
+  background: var(--kagaj-gradient);
+  border: none;
+  border-radius: var(--r, 10px);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kagaj-extract-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px var(--kagaj-accent-glow);
+}
+
+.kagaj-extract-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.kagaj-extract-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.kagaj-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: kagajSpin 0.8s linear infinite;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+}
+
+.kagaj-extract-btn.loading .kagaj-spinner {
+  display: inline-block;
+}
+
+.kagaj-extract-btn.loading .btn-text {
+  opacity: 0.8;
+}
+
+@keyframes kagajSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.kagaj-preview-section {
+  margin-top: 1rem;
+  display: none;
+}
+
+.kagaj-preview-section.visible {
+  display: block;
+}
+
+.kagaj-preview-placeholder {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted, #64748b);
+  font-size: 0.85rem;
+}
+
+.kagaj-preview-img {
+  width: 100%;
+  border-radius: var(--r, 10px);
+  border: 1px solid var(--kagaj-border-glass);
+  max-height: 380px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.kagaj-results-card {
+  display: block;
+  height: 100%;
+}
+
+.kagaj-result-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.kagaj-result-field {
+  background: var(--kagaj-bg-glass);
+  border: 1px solid var(--kagaj-border-glass);
+  border-radius: var(--r, 10px);
+  padding: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.kagaj-result-field:hover {
+  border-color: rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.03);
+}
+
+.kagaj-field-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+.kagaj-field-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary, #f1f5f9);
+  word-break: break-word;
+  user-select: all;
+  cursor: text;
+  padding-right: 2rem;
+}
+
+.kagaj-copy-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 6px;
+  color: var(--kagaj-accent-light);
+  padding: 0.3rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.kagaj-copy-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.kagaj-copy-btn.copied {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--status-online, #10b981);
+  color: var(--status-online, #10b981);
+}
+
+.kagaj-raw-text-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--kagaj-bg-glass);
+  border: 1px solid var(--kagaj-border-glass);
+  border-radius: var(--r, 10px);
+  position: relative;
+}
+
+.kagaj-raw-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+
+.kagaj-raw-text-box .kagaj-btn-bar {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.kagaj-download-btn {
+  background: #007bff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.kagaj-download-btn:hover {
+  background: #0069d9;
+}
+
+.kagaj-save-txt-btn {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 6px;
+  color: var(--status-online, #10b981);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.kagaj-save-txt-btn:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: var(--status-online, #10b981);
+}
+
+.kagaj-save-os-btn {
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 6px;
+  color: #c4b5fd;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.kagaj-save-os-btn:hover {
+  background: rgba(139, 92, 246, 0.25);
+  border-color: #a78bfa;
+}
+
+.kagaj-copy-all-btn {
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 6px;
+  color: var(--kagaj-accent-light);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.kagaj-copy-all-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.kagaj-copy-all-btn.copied {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--status-online, #10b981);
+  color: var(--status-online, #10b981);
+}
+
+.kagaj-formatted-output {
+  background: #ffffff;
+  color: #111827;
+  padding: 1.25rem;
+  border-radius: var(--r-md, 8px);
+  margin-top: 0.6rem;
+  max-height: 420px;
+  overflow-y: auto;
+  line-height: 1.6;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.kagaj-formatted-output table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.kagaj-formatted-output th,
+.kagaj-formatted-output td {
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.kagaj-formatted-output th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+}
+
+.kagaj-formatted-output h1,
+.kagaj-formatted-output h2,
+.kagaj-formatted-output h3,
+.kagaj-formatted-output h4 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.kagaj-formatted-output p {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.kagaj-formatted-output ul,
+.kagaj-formatted-output ol {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.kagaj-formatted-output strong {
+  font-weight: 700;
+}
+
+.kagaj-formatted-output pre {
+  background: #f8fafc;
+  padding: 0.75rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85rem;
+}
+
+.kagaj-formatted-output code {
+  background: #f1f5f9;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.kagaj-error-box {
+  display: none;
+  padding: 1rem;
+  background: var(--error-bg, rgba(239, 68, 68, 0.08));
+  border: 1px solid var(--error-border, rgba(239, 68, 68, 0.2));
+  border-radius: var(--r, 10px);
+  color: var(--error, #ef4444);
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  word-break: break-word;
+}
+
+.kagaj-error-box.visible {
+  display: block;
+}
+
+.kagaj-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--surface-solid, #111827);
+  border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+  border-radius: var(--r, 10px);
+  padding: 0.7rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--status-online, #10b981);
+  font-weight: 500;
+  z-index: 10000;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.kagaj-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.kagaj-footer {
+  position: relative;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-muted, #64748b);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.kagaj-config-card {
+  margin-bottom: 1.5rem;
+}
+
+.kagaj-config-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+@media (max-width: 600px) {
+  .kagaj-config-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kagaj-config-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.kagaj-config-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  letter-spacing: 0.04em;
+}
+
+.kagaj-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.kagaj-config-input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--kagaj-bg-glass);
+  border: 1px solid var(--kagaj-border-glass);
+  border-radius: var(--r, 8px);
+  color: var(--text-primary, #f1f5f9);
+  font-family: inherit;
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  box-sizing: border-box;
+}
+
+.kagaj-config-input:focus {
+  border-color: var(--brand, #6366f1);
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.kagaj-key-toggle-btn {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.2rem;
+  color: var(--text-muted, #64748b);
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.kagaj-key-toggle-btn:hover {
+  color: var(--text-primary, #f1f5f9);
+}
+
+.kagaj-save-config-btn {
+  width: 100%;
+  padding: 0.55rem 1rem;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--r, 8px);
+  color: var(--kagaj-accent-light, #818cf8);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kagaj-save-config-btn:hover {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: var(--brand, #6366f1);
+  color: #ffffff;
+}
+
+.kagaj-save-config-btn.saved {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--status-online, #10b981);
+  color: var(--status-online, #10b981);
+}
+
+@media (max-width: 768px) {
+  .kagaj-main-container {
+    grid-template-columns: 1fr;
+  }
+  .kagaj-title {
+    font-size: 1.6rem;
+  }
+  .kagaj-result-fields {
+    grid-template-columns: 1fr;
+  }
+}

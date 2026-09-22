@@ -54,10 +54,13 @@ import { ModeSwitcherApp } from "./apps/modeSwitcher.js";
 import { AquariumApp } from "./apps/aquarium.js";
 import { InfaredYoutubeApp } from "./apps/infraredYoutube.js";
 import { PortfolioApp } from "./apps/portfolio.js";
+import { MusicPlayerApp } from "./apps/MusicPlayer.js";
+import { KagajAiApp } from "./apps/kagajAi.js";
 
 const APP_CLASS_MAP = {
   terminalApp: TerminalApp,
   cameraApp: CameraApp,
+  musicPlayerApp: MusicPlayerApp,
   aboutApp: AboutApp,
   projectsApp: ProjectsApp,
   contactApp: ContactApp,
@@ -80,8 +83,7 @@ const APP_CLASS_MAP = {
   yukiOsGuideApp: YukiOsGuideApp,
   introTourApp: IntroTourApp,
   clipboardManagerApp: ClipboardManagerApp,
-  aiAssistantApp: AIAssistantApp,
-  kagajAiApp: AIAssistantApp,
+  kagajAiApp: KagajAiApp,
   displayPerformanceApp: DisplayPerformanceApp,
   networkTrayApp: NetworkTrayApp,
   emojiSelectorApp: EmojiSelectorApp,

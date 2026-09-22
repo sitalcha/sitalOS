@@ -5,10 +5,8 @@ import { BusEvents } from "./core/EventBusConstants.js";
 
 export const MODES = Object.freeze({
   MAC: "mac",
-  TILING: "tiling",
-  "3D": "3d",
   CHROME_OS: "chromeos",
-  STEAMDECK: "steamdeck"
+  KALI: "kali"
 });
 
 export const MODE_DEFS = {
@@ -18,29 +16,17 @@ export const MODE_DEFS = {
     storageKey: StorageKeys.macOsControls,
     label: "Yuki Mac Desktop"
   },
-  [MODES.TILING]: {
-    cssClass: "tiling-active",
-    cssTarget: "body",
-    storageKey: StorageKeys.tilingEnabled,
-    label: "Yuki Tiling VM"
-  },
-  [MODES["3D"]]: {
-    cssClass: "3d-mode",
-    cssTarget: "html",
-    storageKey: null,
-    label: "Yuki 3D Desktop"
-  },
   [MODES.CHROME_OS]: {
     cssClass: "chromeos-mode",
     cssTarget: "html",
     storageKey: StorageKeys.chromeOsMode,
     label: "Yuki Chrome OS"
   },
-  [MODES.STEAMDECK]: {
-    cssClass: "steamdeck-mode",
+  [MODES.KALI]: {
+    cssClass: "kali-mode",
     cssTarget: "html",
-    storageKey: StorageKeys.steamDeckMode,
-    label: "Yuki Steam Client"
+    storageKey: StorageKeys.kaliMode,
+    label: "sital Kali Linux"
   }
 };
 

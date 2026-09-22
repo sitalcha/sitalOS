@@ -18,7 +18,6 @@ import { WindowStateManager } from "./windowManager/WindowStateManager.js";
 import { ContextMenuManager } from "./windowManager/ContextMenuManager.js";
 import { WindowManagerUtils } from "./windowManager/WindowManagerUtils.js";
 import { HEADER_STYLES, resolveHeaderStyleId } from "./windowManager/headerStyles.js";
-import { TilingManager } from "./modes/tiling/TilingManager.js";
 import { StorageKeys, os, MODES } from "./framework.js";
 import { $, createElement } from "./shared/domUtils.js";
 import { isMobile } from "./shared/platformUtils.js";
@@ -73,17 +72,11 @@ export class WindowManager {
     this.utils = new WindowManagerUtils(this);
     this.appliedHeaderStyleId = resolveHeaderStyleId();
 
-    this.tilingManager = new TilingManager(this);
-
     this.snapSystem.init();
     this.inputHandler.init();
     this.utils.init();
 
     this.workspaceManager = new WorkspaceManager(this);
-
-    setTimeout(() => {
-      this.tilingManager.init();
-    }, 0);
 
     initClickBubble();
 
@@ -374,16 +367,12 @@ export class WindowManager {
   }
 
   isTilingEnabled() {
-    return this.tilingManager?.enabled ?? false;
+    return false;
   }
 
-  setTilingEnabled(enabled) {
-    this.tilingManager?.toggleMode(enabled);
-  }
+  setTilingEnabled() {}
 
-  onTilingWindowCreated(winId) {
-    this.tilingManager?.onWindowCreated(winId);
-  }
+  onTilingWindowCreated() {}
 
   mountWindow(win, winId, title, iconValue, color = null, opts = {}) {
     const mountTarget = opts.mountTarget || document.body;

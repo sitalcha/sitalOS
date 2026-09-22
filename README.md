@@ -1,520 +1,201 @@
-# sitalcOS
+# sitalOS
 
-> **sitalcOS — Based on YukiOS by Reeyuki (https://github.com/Reeyuki/YukiOS)**  
-> **Licensed under BSD-3-Clause**
-
-Personal Portfolio Web Operating System by Sital Bahadur Chaudhari (https://sitalc.com.np/)
+> **sitalOS: Personal Web Desktop Operating System**  
+> Developed by Sital Bahadur Chaudhari ([sitalc.com.np](https://sitalc.com.np/))  
+> Licensed under BSD-3-Clause (Based on YukiOS by Reeyuki)
 
 ---
 
 <div align="center">
 
-[![License](https://img.shields.io/github/license/Reeyuki/yukios?style=for-the-badge&color=blue)](LICENSE)
-[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord)](https://discord.gg/wufbWFwr4G)
+[![License](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20Desktop%20%7C%20Mobile-blueviolet.svg)](#)
+[![Built With](https://img.shields.io/badge/Built%20With-Vanilla%20JS%20%2B%20Vite-orange.svg)](#)
 
-**Try it now:** [yukios.pages.dev](https://yukios.pages.dev) · [yukios.vercel.app](https://yukios.vercel.app) ·
-[yukios.netlify.app](https://yukios.netlify.app) · [yukiwebos.github.io](https://yukiwebos.github.io)
+**Live Demo:** [https://sitalc.com.np](https://sitalc.com.np)
 
 </div>
 
-> A browser-native multi-environment web desktop. Switch seamlessly between floating desktops (macOS, ChromeOS), dynamic
-> BSP tiling (Hyprland), game consoles (Yuki Deck), all running on a single persistent client-side core built in vanilla
-> JavaScript (no UI framework).
-
-YukiOS is not just another web desktop. It is a single browser tab that rewrites its entire window management paradigm,
-UI chrome, input model, and workspace semantics at runtime without destroying open applications, file system state, or
-user context. One session, six switchable desktop modes.
-
-It runs Flash, DOS, and console emulators, WebAssembly runtimes, and standard web apps side by side on a persistent
-client-side filesystem, and it is built entirely in vanilla JavaScript without any frameworks.
+sitalOS is a next-generation, browser-native multi-environment operating system. Switch seamlessly between floating desktops (macOS, Kali Linux, ChromeOS), dynamic BSP tiling (Hyprland), mobile phone interfaces (Android 14 Pixel, Kali NetHunter), game consoles (sitalOS Deck), and interactive 3D virtual workspaces, all running on a single persistent client-side core built in vanilla JavaScript with zero heavy UI frameworks.
 
 ---
 
-## Screenshots
+## What Is New in sitalOS
 
-|                                                                                                             |                                                                                            |
-| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| ![Mac Mode](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/mac.png)                          | ![YukiDeck](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/yuki-deck.png)   |
-| ![ChromeOS Mode](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/chromeos.png)                | ![Start Menu](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/startmenu.png) |
-| ![Workspaces](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/workspaces.png)                 | ![Widgets](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/widgets.png)      |
-| ![WASM Terminal Apps](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/btop-lavat-cmatrix.png) | ![3D Os Mode](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/3d.png)        |
-| ![Remote Desktop](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/remote.png)                 | ![Steam](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/steam.png)          |
-| ![Steam Overlay](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/overlay.png)                 | ![Tiling Mode](https://raw.githubusercontent.com/Reeyuki/YukiOS/main/.github/tiling.png)   |
+### 1. Kagaj AI (कागज AI) Document Intelligence
+- **Native Document Assistant:** Extract text, handwritten notes, structured tables, invoices, and receipts from images and PDF documents directly inside sitalOS.
+- **Custom Gemini Model Support:** Visitors can use the pre-configured high-speed API or provide their own custom Gemini model name (such as `gemini-2.0-flash`, `gemini-1.5-pro`, `gemini-2.5-pro`) and personal API key directly from the UI.
+- **Persistent Storage:** Keys and model selections are automatically saved in local storage.
+- **Nepali Handwriting Recognition:** Accurately recognizes and transcribes handwritten Devanagari (Nepali) scripts as well as English text.
+- **Direct Export:** Save extracted documents as Word (`.doc`), plain text (`.txt`), copy to clipboard, or store directly into `/home/Documents/` in the virtual filesystem.
 
----
+### 2. cPanel-Ready Music Player & macOS Desktop Widget
+- **Local cPanel Hosting:** Built-in support for uploading your own songs directly to your server (`public_html/music/`).
+- **Standard Track Mapping:** Pre-configured paths for `/music/track1.mp3` through `/music/track5.mp3` and cover art `/music/cover1.jpg` through `/music/cover5.jpg`.
+- **Smart Online Fallback:** If custom files are not yet uploaded, the player automatically streams high-quality royalty-free audio without crashing or interrupting playback.
+- **macOS Desktop Widget:** Interactive widget with live album art, track titles, scrubbing progress bar, volume controls, and play/pause toggles.
+- **Rich Vinyl Animation:** Animated vinyl turntable playback with full media session API integration.
 
-# Desktop Environments
+### 3. Mobile Multi-Shell & Android 14 Experience
+- **Material You Pixel Shell:** Adaptive squircles, dynamic color theming, Google search pill, and authentic Android status bar.
+- **Kali NetHunter Mobile Shell:** Cyber offensive security tools, live terminal card, network status indicators, and tactical quick toggles.
+- **ChromeOS Tablet Mode:** Fullscreen touch app drawer, touch-friendly shelf, and quick settings menu.
+- **Mobile Lock Screen:** Swipe-up unlocking with real-time clock, battery percentage, and notification preview.
+- **Slide-Up App Drawer:** Smooth pull-up gesture to search and launch any installed application.
+- **Android Gesture Navigation:** Interactive back arrow edge gestures and swipe-up home navigation bar.
 
-YukiOS ships six complete desktop paradigms, each a switchable mode of the same core. Pick any mode from the session
-picker at login, or switch live. Every mode shares the same running applications, open files, persistent settings, and
-IndexedDB-backed filesystem.
+### 4. Modern Kali Linux (2024/2025) Shell
+- **Authentic XFCE Top Panel:** Complete with official Kali dragon application menu, workspace switcher buttons, live running window tabs, telemetry monitors, and power controls.
+- **Live System Telemetry:** Real-time dynamic CPU and RAM usage badge (`⚡ CPU XX%  RAM X.X GB`) updating live.
+- **Categorized Whisker Menu:** 12 offensive security tool suites including Information Gathering, Vulnerability Analysis, Web Applications, Database Assessment, Password Attacks, Wireless Attacks, Reverse Engineering, Exploitation, and Forensics.
+- **Quick Security Launchers:** Direct terminal access for Nmap, Nikto, Burp Suite, SQLMap, John the Ripper, Hydra, Aircrack-ng, Ghidra, Metasploit, and Wireshark.
+- **Geometric Cyber Dragon Wallpaper:** 3D polygonal Kali dragon artwork on deep carbon fiber texture.
 
-## 🍎 macOS Shell
+### 5. macOS Sonoma Shell
+- **Fisheye Dock:** Smooth spring-scale icon enlargement on hover with dynamic running indicators.
+- **Natural Window Animations:** Realistic dock minimization curves and spring scale app opening animations.
+- **Control Center:** Quick sliders for display brightness, system volume, Dark Mode, Night Light, Do Not Disturb, and accent colors.
+- **Launchpad (F4):** Fullscreen application grid with live search and glassmorphic backdrop.
 
-A full macOS-inspired desktop with top menu bar, animated fisheye dock, Launchpad, and Control Center.
+### 6. Dynamic BSP Tiling Mode (Hyprland)
+- Real-time binary tree tiling with per-workspace layouts.
+- Keyboard navigation (Alt+Arrow), split resizing (Ctrl+Alt+Arrow), and drag-to-swap window positions.
+- Live configuration reloading via Settings or `Config/yukiOs/tiling.conf`.
+- Built-in `hyprctl` CLI command in terminal.
 
-- **Top menu bar** with Start Menu and Finder access through macOS-style category menus
-- **Animated fisheye dock** where pinned apps scale and push neighbors on hover, open apps auto-pin, and items are
-  draggable to reorder
-- **Control Center tray** with brightness, volume, battery, power mode, dark mode, dock toggle, accent colors, and lock
-  screen
-- **Traffic light window buttons** on all window headers
-- **Launchpad** (F4) with a fullscreen app grid, glassmorphism backdrop, live search, slide-from-dock animation, bigger
-  icons on hover, and hover-zoom, pinned to the Dock in Mac Mode
+### 7. sitalOS Deck & 3D Interactive Room
+- Fullscreen console navigation designed for gamepad and keyboard controls.
+- Game library manager with sorting, favorite pinning, and playtime stats.
+- 3D interactive virtual room with interactive computer monitor and physical game cartridges.
 
-## 🎮 Yuki Deck Mode
-
-A fullscreen, animated and full-sfx game-console-style environment you can pick at login, controlled with a gamepad or
-keyboard/mouse, with home feed and library management.
-
-- **Home feed** with new releases, friends activity, and recommended games
-- **Game library** to search, sort by name, mark favorites, and build collections
-- **Quick Actions Panel** to manage deck quick settings and friends list
-- **In-game overlay** (Shift+Tab) with playtime tracking, friends panel, screenshot capture, performance monitor, and
-  in-overlay web browser
-
-## 🌐 ChromeOS Mode
-
-A lightweight, tab-centric web-first environment with a dedicated shelf layout optimized for browser workflows.
-
-- Shelf-style taskbar with pinned web apps and running indicators
-- Tab-oriented windowing model for rapid web app switching
-- Simplified system tray with essential controls
-- Lightweight profile optimized for lower-resource machines
-
-## 🔲 Hyprland BSP Tiling Mode
-
-A keyboard-driven Binary Space Partitioning tiling window manager inspired by Hyprland, switchable from the session
-picker, with per-workspace tree layouts and live config reloading.
-
-- **Alt+Space** toggles tiling on/off; **Alt+Arrow** moves focus, **Ctrl+Alt+Arrow** resizes boundaries,
-  **Alt+Shift+Arrow** swaps windows
-- **9 independent workspaces** (Alt+1-9), each with its own BSP tree; **Alt+Q** closes focused window, **Alt+F** toggles
-  floating, **Alt+T** spawns terminal
-- **Drag-to-swap**: drag a tiled window onto another to swap positions in the tree
-- **Live config**: gap, border width, and split ratio adjustable from Settings > Tiling or the config file at
-  `Config/yukiOs/tiling.conf` (live-reload on save); customizable with gaps (inner/outer), split ratio, border
-  width/radius, resize step, animation duration/easing, mouse resize toggle, workspace switch delay, and resize debounce
-- **hyprctl** terminal command for Hyprland-style CLI control
-
-## 🧊 3D OS Mode
-
-A 3d fps game where player can walk around in a room and interact with computer monitor, grab and launch game cases that
-hide game and open inside os page, or play sorting minigame
-
-## ⚡ Yuki Native Session
-
-The default hybrid desktop layout, a modern, high-density multitasking environment blending familiar desktop conventions
-with YukiOS-specific innovations.
-
-- Full floating window management with snapping, workspaces, and animations
-- Desktop widgets, system tray, notification center
-- Start menu with fuzzy search, favorites, and category management
-- Configurable taskbar placement on any screen edge
+### 8. Electron Desktop Packaging
+- Standalone Windows installer: `sitalOS.Setup.exe` built via NSIS.
+- Native system tray integration, global shortcuts, and offline application support.
 
 ---
 
-## Architecture
+## 60+ Built-in Applications
 
-YukiOS uses a shared-state architecture. Switching from Hyprland tiling to macOS shell does not destroy your open
-applications, file system, or workspace context. The UI layout engine morphs around the running state.
+sitalOS includes a complete ecosystem of desktop applications:
+
+- **Productivity & Office:** Kagaj AI Document Assistant, Text Editor, Markdown Viewer, PDF Reader, Calculator, Sticky Notes, Calendar.
+- **Development & Tools:** Terminal (WASM shell with Python, Node, C tools), Monaco Code Editor, Git Manager, Process Manager, Port Manager, Storage Inspector.
+- **Files & Media:** File Explorer with archive support (ZIP, 7Z, TAR, RAR), Music Player, Video Player, Photo Gallery, Screen Recorder, Canvas Paint.
+- **Games & Emulators:** Subway Surfers, Flash Player emulator, DOSBox emulator, Retro console emulators, Steam social feed.
+- **System Settings:** Desktop Mode Switcher, Theme Customizer (25+ themes), Wallpaper Engine, Audio Mixer, Keybind Manager.
+
+---
+
+## System Architecture
+
+sitalOS uses a shared-state architecture. Switching desktop environments (such as switching from macOS to Kali Linux or Hyprland tiling) does not close your running applications or reset your virtual filesystem.
 
 ```
                       ┌───────────────────────────────────────┐
-                     │        YukiOS Central Core            │
-                     │   (Application Registry & App Layer)  │
+                      │          sitalOS Core Engine          │
+                      │  (App Registry, EventBus, VFS Layer)  │
                       └──────────────────┬────────────────────┘
                                          │
         ┌────────────────────────────────┼────────────────────────────────┐
         │                                │                                │
         ▼                                ▼                                ▼
 ┌─────────────────┐            ┌─────────────────┐            ┌─────────────────┐
-│   macOS Shell   │            │ Hyprland Shell  │            │  ChromeOS       │
-│ (Dock & TopBar) │            │ (BSP Tiling)    │            │  (Minimal shelf)│
+│   macOS Shell   │            │   Kali Linux    │            │ Hyprland Tiling │
+│ (Dock & TopBar) │            │  (XFCE Panel)   │            │   (BSP Engine)  │
 └───────┬─────────┘            └────────┬────────┘            └────────┬────────┘
         │                               │                              │
         ├───────────────────────────────┼──────────────────────────────┤
         │                               │                              │
         ▼                               ▼                              ▼
 ┌─────────────────┐            ┌─────────────────┐            ┌─────────────────┐
-│  Yuki Deck UI   │            │ GNOME Shell     │            │Windows(Upcoming)│
-│ (Gamepad Focus) │            │   (Upcoming)    │            │ (XP/Win7/10/11) │
+│  Mobile Shells  │            │ sitalOS Deck UI │            │  3D Room Mode   │
+│(Pixel/NetHunter)│            │(Gamepad Console)│            │(Three.js Scene) │
 └───────┬─────────┘            └────────┬────────┘            └────────┬────────┘
         │                               │                              │
         └───────────────────────────────┼──────────────────────────────┘
                                         │
                                         ▼
-                    ┌───────────────────────────────────────┐
-                     │         Window Manager               │
-                     │  (Mounted Apps · EventBus · VFS Layer)│
+                     ┌───────────────────────────────────────┐
+                     │            Window Manager             │
+                     │  (Snap, Minimize, Z-Index, Workspaces)│
                      ├───────────────────────────────────────┤
-                     │   IndexedDB / Blob Storage Persistence│
-                    └───────────────────────────────────────┘
+                     │   IndexedDB / Blob Storage VFS Layer  │
+                     └───────────────────────────────────────┘
 ```
 
-### Under the Hood
+---
 
-- **Persistent Runtime:** Open apps, files, and state survive desktop mode swaps—only the window manager and shell UI
-  change.
-- **Pure Vanilla JS:** No runtime UI framework; built with plain JavaScript and Vite tooling.
-- **Custom BSP Engine:** Real-time binary tree tiling with live configuration updates and `hyprctl` CLI controls.
-- **State Persistence:** Settings, filesystem, and window state persist across mode switches via IndexedDB.
+## Getting Started
+
+### Prerequisites
+- Node.js 18+ or 20+
+- pnpm or npm
+
+### Installation
+```bash
+git clone https://github.com/sitalcha/sitalOS.git
+cd sitalOS/webos-desktop
+pnpm install
+```
+
+### Run in Development Mode
+```bash
+pnpm dev
+```
+Open your browser and navigate to `http://localhost:5173`.
+
+### Build for Production
+```bash
+pnpm build
+```
+The optimized build artifacts will be generated in `webos-desktop/dist/`.
 
 ---
 
-<details>
-<summary><strong>🖥 Desktop Window Management</strong></summary>
+## cPanel & Web Hosting Deployment
 
-- Draggable, resizable, minimizable, maximizable windows
-- Window snapping (half screen, quarter screen, fullscreen)
-- Multiple workspaces with independent layouts
-- Window switching and focus cycling (Alt+Q)
-- Window context menus (snap, move, pin, workspace transfer)
-- Window header context menus and title bar icons (double-click to close)
-- Taskbar positioned on any screen edge
-- Taskbar drag-to-reorder and click to minimize/restore
-- Live taskbar window preview on hover
-- System tray with background-running apps
-- Tray icon scroll actions for audio, brightness, and workspace switching
-- Tray context menus with per-item quick actions
-- Desktop icon system with persistent shortcuts and image thumbnails
-- Desktop drag-and-drop from host OS and icon rearrangement
-- Alt+Left-Click window drag / Alt+Right-Click window resize
-- Magnetic edge snapping on drag and resize to screen edges and taskbar
-- Window animation system with 35+ effects
-- KDE-inspired physics-based wobbly windows when dragging
-- Desktop peek button (minimize/restore all windows, hover to reveal desktop)
-- Cursor launch effect when applications start
-- Desktop widgets: clock, weather, notes, calendar, todo, music controls, system monitor, battery, clipboard, YouTube
-  embed, photo frame slideshow, timer/stopwatch
-
-</details>
-
-<details>
-<summary><strong>🧭 Navigation & Input</strong></summary>
-
-- Start menu with:
-  - Fuzzy search across all apps and settings categories
-  - Favorites system with gold-tinted highlights and a dedicated favorites page
-  - Customizable app grid (add/edit/remove) and category management (rename, delete/hide, restore)
-  - App grid organized into categories: Core, Web, Games, Files
-  - Desktop icon toggles to show/hide Games and System Apps independently
-  - User profile display with avatar, name, and hover tooltip
-  - Description tooltips on hover for all items
-  - Recent page tracking last-opened apps and files
-  - Full keyboard navigation and persistent settings for width, height, and category visibility
-  - Clippy contextual tips on favorites and search events
-- Notification system with app icons and actions; notification center with grouped messages, Do Not Disturb mode, and
-  notification positioning controls
-- Animated UI components including start menu, wallpaper switcher, audio mixer, context menus, and notifications
-- Desktop and file context menus: New Folder/Document, Add from OS, Download, Archive, Extract, Set as Wallpaper, Open
-  Terminal Here, Screen Capture, Copy/Cut/Paste, Rename, Properties, Convert, Refresh, Background submenu
-  (Vanta.js/video)
-- Command palette (Ctrl+K / Ctrl+P / F1) for app, file, and command search with built-in calculator, terminal run (`>`
-  prefix), and unit converter; quick actions for wallpaper, themes, DND, mute, workspace switching, and logout;
-  screenshot and screen recording controls
-- Run dialog (Ctrl+Shift+R) for compact quick-launch of apps, URLs, and terminal commands
-- Clippy contextual assistant with per-app tips
-- Keyboard shortcuts app for customizing all global hotkeys
-
-**Key Global Shortcuts:**
-
-| Shortcut                 | Action                   |
-| ------------------------ | ------------------------ |
-| Ctrl+K / Ctrl+P / F1     | Command palette          |
-| Ctrl+Alt+R               | Run dialog               |
-| Ctrl+D                   | Show/hide desktop        |
-| Alt+Q                    | Cycle windows            |
-| Ctrl+Shift+S             | Full screenshot          |
-| Ctrl+Alt+S               | Area screenshot          |
-| Ctrl+Shift+R             | Screen recording         |
-| Ctrl+Arrow               | Snap window half/quarter |
-| Ctrl+Alt+ArrowUp/Down    | Brightness               |
-| Ctrl+Alt+ArrowLeft/Right | Color temperature        |
-| Alt+H                    | Color picker             |
-
-</details>
-
-<details>
-<summary><strong>📁 Files & Storage</strong></summary>
-
-- IndexedDB-backed Explorer with grid/list views, sortable columns, image thumbnails, inline rename, file properties,
-  trash, drag-select, storage usage indicator, and thumbnail cache
-- Sidebar with persistent Quick Access pin/unpin
-- Archive support: extract `.zip`/`.7z`/`.tar`/`.gz`/`.bz2`/`.xz`/`.rar`; create `.zip`/`.7z`/`.tar`/`.tar.gz`/`.bz2`
-  with compression level and ZIP password
-- Font file preview (TTF/OTF) with live sample text rendering and "Set as System Font"
-- Right-click file conversion: images (PNG, JPEG, WebP, SVG), data (JSON, CSV, XML, YAML), text (TXT, Markdown, HTML),
-  audio/video
-- Mount external folders as virtual drives, set images as wallpaper, open folders in Terminal
-- Save As and file/directory picker dialog
-- File associations: Default Apps app to set, change, or remove the default app per file type
-- "Open with" context menu lists every compatible app, plus app picker dialog
-- Explorer keyboard shortcuts: Ctrl+C/X/V, Ctrl+F search, Ctrl+A select all, arrow keys navigate, Enter open, F5
-  refresh, F2 rename, Delete trash
-
-</details>
-
-<details>
-<summary><strong>⚙️ System Features</strong></summary>
-
-- Audio mixer with per-app volume sliders, live waveform intensity visualizer, master/system volume, mute toggle, and
-  tray scroll-to-adjust
-- System sounds with interaction noises
-- Achievement tracking and usage milestones
-- Theme system: 40+ presets, custom theme support, light/dark and transparency modes
-- Wallpaper engine: 400+ animated wallpapers and customizable Vanta.js support in the wallpaper engine app
-- PWA install and offline caching
-- User accounts with multi-profile support
-- Lock screen, session management, and idle timeout
-- Power profiles (Turbo, Balanced, Quality) with tray controls
-- Brightness, contrast, gamma, and color temperature sliders
-- Custom cursor support (Miku default)
-- Custom font system to set any TTF/OTF as system font
-- Import/export for backup and migration
-- Transparent UI toggle with glass effect on windows, taskbar, and start menu
-- Live taskbar clock with calendar popup and keyboard navigation
-
-</details>
-
-<details>
-<summary><strong>🔌 Extensibility</strong></summary>
-
-- Custom App Creator for adding web shortcuts with auto-detected favicons and per-app CORS proxy
-- Scramjet/BareMux-based web app proxy for embedding third-party sites
-- URL parameter launch: `?app=`, `?game=`, `?deck=1` for Yuki Deck Mode
-
-</details>
-
-<details>
-<summary><strong>📂 Local Files & Dev Server (virtual, in-browser)</strong></summary>
-
-- `python -m http.server [port] [--directory DIR]` inside YukiOS Terminal serves the virtual filesystem at
-  `http://localhost:PORT` via the in-browser `PortManager` (`src/services/PortManager.js:1`,
-  `src/terminal/httpServer.js:80`). Press `Ctrl+C` to stop. This does not expose a host OS server
-- Viewable only in Yuki Browser, which handles `localhost`/`127.0.0.1`/`0.0.0.0:PORT`, `fs://`, `file://`, `/abs/path`
-  natively without proxy. Includes directory listings, HTML with relative asset rewrites, and media/text/download views
-- Entirely virtual with no real TCP. Unregistered ports show `ERR_CONNECTION_REFUSED` with dino minigame. Use it to
-  preview local sites and assets inside YukiOS
-
-</details>
+1. Run `pnpm build` inside the `webos-desktop/` folder.
+2. Open your cPanel File Manager and navigate to `public_html/`.
+3. Upload all contents from the `webos-desktop/dist/` directory into `public_html/`.
+4. To add your own custom songs to the Music Player:
+   - Navigate to `public_html/music/`.
+   - Upload your MP3 files named `track1.mp3`, `track2.mp3`, `track3.mp3`, `track4.mp3`, `track5.mp3`.
+   - Optionally upload cover images named `cover1.jpg`, `cover2.jpg`, `cover3.jpg`, `cover4.jpg`, `cover5.jpg`.
+5. Access your website at your domain (e.g. `https://sitalc.com.np`).
 
 ---
 
-# 📦 Built-in Applications
+## Building the Desktop Application
 
-90+ built-in applications organized by category.
-
-<details>
-<summary><strong>🧠 Productivity & Development</strong></summary>
-
-- Explorer
-- Default Apps (set default per file type)
-- Terminal, a Unix-like shell with filesystem access, Python/Node REPLs, and Git
-  - Full Git integration (clone, init, add, commit, push, pull, branch, stash, fetch, diff, remote, rm, checkout, log,
-    status)
-  - Multiple independent tabs (Alt+T / Ctrl+Tab / Alt+1-9)
-  - `file` command with content-based magic byte detection (10+ formats)
-  - `neofetch` with GPU/RAM/browser/engine detection
-  - Pipeline (`|`), redirects (`>`/`>>`), command chaining (`&&`/`||`/`;`), Ctrl+R reverse search
-  - `yuki` command for OS control (power mode, brightness, themes, wallpaper, workspaces, app management, DND,
-    notifications)
-  - `python -m http.server [port]` (virtual, YukiOS only) serves VFS dir on `localhost:PORT` for preview in Yuki Browser
-    inside YukiOS
-  - **[lavat](https://github.com/Reeyuki/lavat-web)**, a lava lamp simulation with customizable metaballs and gravity;
-    Emscripten WASM port (by Reeyuki) of the original C program, runs fully client-side
-  - **[cmatrix](https://github.com/Reeyuki/cmatrix/)**, a Matrix rain animation with color, speed, and character modes;
-    browser-native JS reimplementation (by Reeyuki)
-  - **[btop](https://github.com/Reeyuki/btop-emscripten)**, a real-time resource monitor (CPU, memory, disks, network,
-    processes); Emscripten WASM port (by Reeyuki) that feeds live host system data from YukiOS into the emulated
-    terminal
-- Notepad
-- Markdown Viewer
-- Yuki Code
-- VS Code
-- Run (Ctrl+R quick-launch)
-- Settings
-- Task Manager with system diagnostics and startup app functionality
-- Calculator
-- Clock (alarms, stopwatch, timer)
-- Shortcuts
-- Setup Wizard
-- Achievements
-- Profile Customizer
-- Yuki AI Assistant (WebLLM)
-- Storage Editor
-- Yuki Convert
-- Clipboard Manager
-- Emoji Selector
-- Yuki Dev Tools (It Tools)
-- Dev Tools (Eruda)
-- Weather
-- News
-- Aquarium
-- YukiOS Guide
-- Display Performance
-- Virtual Machine Manager
-- About (system information)
-- Apps (all-apps launcher hub)
-- Launchpad (fullscreen macOS-style app grid)
-- Intro Tour (replayable desktop tour)
-- Mode Switcher (switch desktop modes)
-- Network Tray (tray network status)
-- App Creator (custom iframe web-shortcut builder)
-
-</details>
-
-<details>
-<summary><strong>🎨 Media & Creative Tools</strong></summary>
-
-- Paint
-- Mini Paint
-- Photopea
-- LibreSprite
-- Pixlr
-- Camera App
-- Media Viewer
-- Office Viewer
-- Evil Spotify
-- Blender
-- Magnifier
-- YouTube Utilities
-- Rhythms (Cavalier-like audio visualizer)
-- Screenshot (page capture, area selection, screen recording)
-- Color Picker (screen color sampling with magnified preview)
-- Font Viewer (TTF/OTF)
-- Theme Hub (browse, rank, and install community themes with custom effects)
-- Wallpaper Engine (browse, preview, and manage image, video, and animated wallpapers with custom uploads)
-
-</details>
-
-<details>
-<summary><strong>🌐 Browser & Internet</strong></summary>
-
-- Yuki Browser with Scramjet Proxy, Sidebar Tabs mode, bookmarks, proxy, Tor, history, dark mode, tab system, and
-  screenshot
-- WebTorrent Client
-- Tor Manager, a WASM-based Tor client with Snowflake transport
-- Yuki Steam launcher
-- Maps (interactive maps with OpenStreetMap and Google Maps support)
-- Yuki Remote Desktop (stream your full desktop to any browser via WebRTC with remote input control)
-
-</details>
-
-<details>
-<summary><strong>📱 Web Apps</strong></summary>
-
-- **Communication:** Discord, Slack, Zoom
-- **AI:** ChatGPT, DeepSeek, Grok, CraxGPT
-- **Email:** Gmail, Outlook, ProtonMail
-- **Social:** Twitter/X, Instagram, TikTok
-- **Dev & Creative:** GitHub, GitLab, CodePen, Figma, Google Docs, Canva
-- **Media & Music:** Spotify, SoundCloud, Twitch, Anime
-- **Games:** GeForce Now, Itch.io, CrazyGames, Newgrounds
-
-</details>
-
-<details>
-<summary><strong>🎮 Games & Emulation</strong></summary>
-
-- Yuki Emulator (EmulatorJS) for NES, SNES, GB, GBA, N64, PSX, and more
-- Ruffle (Flash)
-- JsDos (DOS)
-- Virtual 86 (x86)
-- Azahar (3DS Emulator)
-- Flashpoint Database
-- Yuki Steam storefront with friends, community, playtime tracking and collection system
-- Roblox (browse and play Roblox games)
-- 3D Room (first-person 3D room where your game library comes to life)
-
-### Yuki Steam In-Game Overlay
-
-Shift+Tab overlay with draggable, resizable panels for any running game:
-
-- Playtime overview (total, 2-week, current session)
-- Achievement browser (All/Unlocked/Locked)
-- Friends panel with live active user stats and persistent per-game sticky notes
-- In-overlay web browser and Scramjet proxy panel
-- Screenshot capture, gallery view, and video recording
-- Performance monitor for fps/frame
-- Overlay settings (toggle, perf monitor, rebindable shortcut key)
-
-</details>
-
----
-
-# 🛠 Build & Deployment
+To package sitalOS as a native desktop application for Windows:
 
 ```bash
-pnpm run dev          # Development server
-pnpm run build:dev    # Development build
-pnpm run build        # Production build
-pnpm run preview      # Preview production build
+cd webos-desktop
+pnpm build:electron:win
 ```
 
-## Editing System Source
+The output executable will be created at `webos-desktop/dist-electron/sitalOS.Setup.1.0.0.exe`.
 
-The OS source is shown as a System folder inside explorer, so you can browse and edit it in place.
+---
 
-- Open Files, go to This PC, and open System.
-- Open a file, edit it, and save. On the dev server ,app reloads and your change applies right away, meanwhile in
-  production build its read only.
+## Global Shortcuts
 
-# 🤝 Contributing
+| Key Combination | Action |
+| :--- | :--- |
+| `Ctrl + K` / `F1` | Command Palette (search apps, commands, files) |
+| `Ctrl + Alt + R` | Quick Run Dialog |
+| `Ctrl + D` | Show or Hide Desktop |
+| `Alt + Q` | Cycle active window focus |
+| `Ctrl + Shift + S` | Fullscreen screenshot capture |
+| `Ctrl + Alt + S` | Area screenshot capture |
+| `Ctrl + Arrow` | Window edge snapping (left, right, top, bottom) |
+| `F4` | Open macOS Launchpad |
+| `Alt + Space` | Toggle Hyprland tiling layout |
 
-See the [Development Guide](DEVELOPMENT.md).
+---
 
-# 🖥️ Electron Desktop App
+## Author & Credits
 
-A native Electron wrapper for enhanced desktop integration:
-
-- Native game windows that launch in their own OS-level window with auto-hide menu bar
-- Remote host to stream your real desktop with mouse/keyboard control from any device
-- Autostart YukiOS on system startup
-- Browse real files via home directory drive in Explorer
-
-The web-only version runs in any browser with all core features intact; the Electron app adds native OS integration on
-top.
-
-## Libraries
-
-<details>
-<summary>Third-party dependencies</summary>
-
-- [Ruffle](https://github.com/ruffle-rs/ruffle)
-- [Papirus Icon Pack](https://github.com/PapirusDevelopmentTeam/papirus-icon-theme)
-- [EmulatorJS](https://github.com/EmulatorJS/EmulatorJS)
-- [Monaco Editor](https://github.com/microsoft/monaco-editor)
-- [three.js](https://github.com/mrdoob/three.js)
-- [PDF.js](https://github.com/mozilla/pdf.js)
-- [JSZip](https://github.com/Stuk/jszip)
-- [fflate](https://github.com/101arrowz/fflate)
-- [archive-wasm (Spacedrive)](https://github.com/spacedriveapp/archive-wasm)
-- [7z-wasm (use-strict)](https://github.com/use-strict/7z-wasm)
-- [Handsontable](https://github.com/handsontable/handsontable)
-- [Mammoth.js](https://github.com/mwilliamson/mammoth.js)
-- [Font Awesome](https://github.com/FortAwesome/Font-Awesome)
-- [emoji-mart](https://github.com/missive/emoji-mart)
-- [Vanta.js](https://github.com/tengbao/vanta)
-- [WebTorrent](https://github.com/webtorrent/webtorrent)
-- [Eruda](https://github.com/liriliri/eruda)
-- [Novnc](https://github.com/novnc/novnc)
-- [T-Rex Runner](https://github.com/wayou/t-rex-runner)
-- [webtor-rs](https://github.com/igor53627/webtor-rs) WASM Tor client (Arti + Snowflake)
-- [isomorphic-git](https://github.com/isomorphic-git/isomorphic-git) (Git client via CORS proxy)
-- Scramjet / BareMux / Epoxy Transport
-- [Pyodide](https://github.com/pyodide/pyodide) (WASM Python runtime)
-- [WebContainers](https://github.com/stackblitz/webcontainer-core) (WASM Node.js runtime)
-
-</details>
-
-## Build tooling
-
-- Vite
-- ESLint
-- Prettier
-- [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile)
-
-## License
-
-YukiOS is licensed under the MIT License, see [LICENSE](LICENSE) for details. If you use any part of this project, including code, design, themes or assets, whether you fork or copy, please retain the original copyright notice and kindly credit **YukiOS by Reeyuki** at https://github.com/Reeyuki/YukiOS.
+- **Creator & Maintainer:** Sital Bahadur Chaudhari ([Website](https://sitalc.com.np/) | [GitHub](https://github.com/sitalcha))
+- **Base Project:** Based on YukiOS by Reeyuki ([GitHub](https://github.com/Reeyuki/YukiOS))
+- **License:** Distributed under the BSD 3-Clause License. See [LICENSE](LICENSE) for details.

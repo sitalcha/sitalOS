@@ -16,6 +16,7 @@ const DEFAULT_DOCK_APPS = [
   { appId: "explorerApp", title: "Explorer", icon: `static/icons/file.webp`, color: "#fff" },
   { appId: "browserApp", title: "Yuki Browser", icon: "static/icons/firefox.webp", color: "#fff" },
   { appId: "terminalApp", title: "Terminal", icon: `static/icons/terminal.webp`, color: "#fff" },
+  { appId: "musicPlayerApp", title: "Music", icon: "papirus:apps/multimedia-audio-player", color: "#1db954" },
   { appId: "settingsApp", title: "Settings", icon: "papirus:actions/configure", color: "#adb5bd" },
   { appId: "calculatorApp", title: "Calculator", icon: "papirus:apps/accessories-calculator", color: "#20c997" },
   { appId: "notepadApp", title: "Notes", icon: "static/icons/notepad.webp", color: "#ffc107" },
@@ -40,6 +41,7 @@ export class MacDock {
     this.dragState = null;
     this.autoHideVisible = false;
     this.showHideTimer = null;
+    this.lastActiveWinId = null;
     this.settings = this.getDefaultSettings();
   }
 
@@ -49,7 +51,7 @@ export class MacDock {
       dockPosition: "bottom",
       dockAutoHide: false,
       dockMagnification: true,
-      dockMagnifyAmount: 1.2,
+      dockMagnifyAmount: 1.8,
       dockMagnifyRange: 3,
       dockIconSize: 43,
       dockScale: 100,
@@ -63,7 +65,7 @@ export class MacDock {
       dockPosition: os.storage.get(StorageKeys.dockPosition) || "bottom",
       dockAutoHide: os.storage.get(StorageKeys.dockAutoHide) === "true",
       dockMagnification: os.storage.get(StorageKeys.dockMagnification) !== "false",
-      dockMagnifyAmount: Number(os.storage.get(StorageKeys.dockMagnifyAmount)) || 1.2,
+      dockMagnifyAmount: Number(os.storage.get(StorageKeys.dockMagnifyAmount)) || 1.8,
       dockMagnifyRange: Number(os.storage.get(StorageKeys.dockMagnifyRange)) || 3,
       dockIconSize: Number(os.storage.get(StorageKeys.dockIconSize)) || 43,
       dockScale: Number(os.storage.get(StorageKeys.dockScale)) || 100,
@@ -103,6 +105,11 @@ export class MacDock {
     os.events.on(BusEvents.WINDOW_CLOSED, this.boundClosed);
     os.events.on(BusEvents.SETTINGS_CHANGED, this.boundSettings);
     this.syncMacSetting(true);
+    if (this.manager && this.manager.openWindows) {
+      this.manager.openWindows.forEach((rec, winId) => {
+        this.addItem(winId, rec.icon || rec.iconValue, rec.title, rec.color);
+      });
+    }
   }
 
   destroy() {
@@ -146,6 +153,16 @@ export class MacDock {
     return this.settings.dockEnabled === true;
   }
 
+  triggerBounce(item) {
+    const wrap = item.querySelector(".dock-icon-wrap") || item;
+    wrap.classList.remove("dock-bouncing");
+    void wrap.offsetWidth;
+    wrap.classList.add("dock-bouncing");
+    setTimeout(() => {
+      wrap.classList.remove("dock-bouncing");
+    }, 600);
+  }
+
   addItem(winId, iconValue, title, color = null) {
     if (!this.container) return;
     if (this.runningItems.has(winId)) return;
@@ -156,8 +173,16 @@ export class MacDock {
 
     if (pinned) {
       pinned.winId = winId;
+      pinned.el.classList.add("has-running");
       pinned.el.classList.add("active");
+      let dot = pinned.el.querySelector(".dock-running-dot");
+      if (!dot) {
+        dot = createElement("span", { className: "dock-running-dot" });
+        const wrap = pinned.el.querySelector(".dock-icon-wrap") || pinned.el;
+        wrap.appendChild(dot);
+      }
       this.runningItems.set(winId, { isPinned: true, pinnedRef: pinned });
+      this.updateActiveState(winId);
       return;
     }
 
@@ -173,12 +198,15 @@ export class MacDock {
     label.textContent = title;
 
     const item = createElement("div", {
-      className: "dock-item dock-running",
+      className: "dock-item dock-running has-running active",
       attributes: { "data-win-id": winId }
     });
     item.appendChild(iconWrap);
     item.appendChild(label);
-    item.addEventListener("click", () => this.handleItemClick(winId));
+    item.addEventListener("click", () => {
+      this.triggerBounce(item);
+      this.handleItemClick(winId);
+    });
     item.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       const targetWin = $("#" + winId);
@@ -187,10 +215,10 @@ export class MacDock {
         this.manager.buildContextMenuItems(addMenuItem, addSeparator, targetWin);
       });
     });
-    item.classList.add("active");
 
     this.container.appendChild(item);
     this.runningItems.set(winId, { el: item, isPinned: false, iconValue, title, color });
+    this.updateActiveState(winId);
     this.triggerRecalc();
   }
 
@@ -200,22 +228,39 @@ export class MacDock {
     this.runningItems.delete(winId);
 
     if (entry.isPinned && entry.pinnedRef) {
-      entry.pinnedRef.el.classList.remove("active");
-      return;
-    }
-
-    if (entry.el) {
+      const stillRunning = [...this.runningItems.values()].some(
+        (r) => r.isPinned && r.pinnedRef === entry.pinnedRef
+      );
+      if (!stillRunning) {
+        entry.pinnedRef.el.classList.remove("active");
+        entry.pinnedRef.el.classList.remove("has-running");
+        entry.pinnedRef.winId = null;
+      }
+    } else if (entry.el) {
       entry.el.remove();
       this.triggerRecalc();
+    }
+
+    if (this.lastActiveWinId === winId) {
+      this.lastActiveWinId = null;
+      this.updateActiveState(null);
     }
   }
 
   updateActiveState(winId) {
+    this.lastActiveWinId = winId;
+    const activeEntry = winId ? this.runningItems.get(winId) : null;
+    const activePinned = activeEntry?.isPinned ? activeEntry.pinnedRef : null;
+
+    this.pinnedItems.forEach((pinned) => {
+      if (pinned.el) {
+        pinned.el.classList.toggle("active", Boolean(activePinned && pinned === activePinned));
+      }
+    });
+
     this.runningItems.forEach((entry, id) => {
-      if (entry.isPinned && entry.pinnedRef) {
-        entry.pinnedRef.el.classList.toggle("active", id === winId);
-      } else if (entry.el) {
-        entry.el.classList.toggle("active", id === winId);
+      if (!entry.isPinned && entry.el) {
+        entry.el.classList.toggle("active", Boolean(winId && id === winId));
       }
     });
   }
@@ -271,6 +316,7 @@ export class MacDock {
       item.appendChild(iconWrap);
       item.appendChild(label);
       item.addEventListener("click", () => {
+        this.triggerBounce(item);
         if (app.isFinder) {
           os.app.getInstance(ServiceKeys.COMMAND_PALETTE)?.open();
         } else if (app.isAudioMixer) {
@@ -511,84 +557,41 @@ export class MacDock {
     this.lastClientX = clientX;
     this.lastClientY = clientY;
 
-    const containerRect = this.container.getBoundingClientRect();
     const isHorizontal = s.dockPosition === "bottom";
-    const mousePos = isHorizontal ? clientX - containerRect.left : clientY - containerRect.top;
+    const origin = isHorizontal
+      ? "bottom center"
+      : s.dockPosition === "left"
+        ? "center left"
+        : "center right";
+    const maxScale = Math.max(1.1, Math.min(3, s.dockMagnifyAmount || 1.8));
+    const range = 150;
 
-    const affectRange = Math.max(1, Math.min(10, s.dockMagnifyRange));
-    const magnifyAmount = Math.max(0.1, Math.min(3, s.dockMagnifyAmount));
+    items.forEach((el) => {
+      el.style.transform = "";
+      const wrap = el.querySelector(".dock-icon-wrap");
+      if (!wrap) return;
 
-    let hoverIdx = 0;
-    let minDist = Infinity;
-    items.forEach((el, i) => {
-      const cx = isHorizontal ? el.offsetLeft + el.offsetWidth / 2 : el.offsetTop + el.offsetHeight / 2;
-      const d = Math.abs(mousePos - cx);
-      if (d < minDist) {
-        minDist = d;
-        hoverIdx = i;
+      const itemRect = el.getBoundingClientRect();
+      const itemCenter = isHorizontal
+        ? itemRect.left + itemRect.width / 2
+        : itemRect.top + itemRect.height / 2;
+      const mousePos = isHorizontal ? clientX : clientY;
+      const dist = Math.abs(mousePos - itemCenter);
+
+      let scale = 1;
+      if (dist < range) {
+        const factor = Math.cos((dist / range) * (Math.PI / 2));
+        scale = 1 + (maxScale - 1) * factor * factor;
       }
+
+      wrap.style.transformOrigin = origin;
+      wrap.style.transform = `scale(${scale})`;
     });
 
-    const extras = items.map((el, i) => {
-      const d = Math.abs(i - hoverIdx);
-      if (d > affectRange) return 0;
-      const scale = 1 + magnifyAmount * Math.pow(0.4, d);
-      const dim = isHorizontal ? el.offsetWidth : el.offsetHeight;
-      return (dim * (scale - 1)) / 2;
-    });
-
-    const prefix = [0];
-    for (let i = 0; i < extras.length; i++) {
-      prefix.push(prefix[prefix.length - 1] + extras[i]);
-    }
-
-    let maxStartExtra = 0;
-    let maxEndExtra = 0;
-
-    items.forEach((el, i) => {
-      const dist = Math.abs(i - hoverIdx);
-      const inRange = dist <= affectRange;
-
-      if (inRange) {
-        const scale = 1 + magnifyAmount * Math.pow(0.4, dist);
-        const lift = Math.pow(0.4, dist) * 20;
-        const wrap = el.querySelector(".dock-icon-wrap");
-        if (wrap) {
-          if (isHorizontal) {
-            wrap.style.transform = scale !== 1 ? `scale(${scale}) translateY(${-lift}px)` : "";
-          } else {
-            wrap.style.transform = scale !== 1 ? `scale(${scale})` : "";
-          }
-        }
-      } else {
-        const wrap = el.querySelector(".dock-icon-wrap");
-        if (wrap) wrap.style.transform = "";
-      }
-
-      let push = 0;
-      if (i < hoverIdx) {
-        push = prefix[i + 1] - prefix[hoverIdx + 1];
-      } else if (i > hoverIdx) {
-        push = prefix[i] - prefix[hoverIdx];
-      }
-
-      if (isHorizontal) {
-        el.style.transform = push ? `translateX(${push}px)` : "";
-      } else {
-        el.style.transform = push ? `translateY(${push}px)` : "";
-      }
-
-      if (push < 0) maxStartExtra = Math.max(maxStartExtra, -push);
-      if (push > 0) maxEndExtra = Math.max(maxEndExtra, push);
-    });
-
-    if (isHorizontal) {
-      this.container.style.paddingLeft = 9 + maxStartExtra + "px";
-      this.container.style.paddingRight = 9 + maxEndExtra + "px";
-    } else {
-      this.container.style.paddingTop = 9 + maxStartExtra + "px";
-      this.container.style.paddingBottom = 9 + maxEndExtra + "px";
-    }
+    this.container.style.paddingLeft = "";
+    this.container.style.paddingRight = "";
+    this.container.style.paddingTop = "";
+    this.container.style.paddingBottom = "";
   }
 
   handleFocus({ winId }) {

@@ -6,7 +6,7 @@ import { audioMixer, SystemAudio } from "./audioMixer.js";
 import { YUKIOS_VERSION } from "./apps/about.js";
 import { SITAL_PROFILE } from "./config/profile.js";
 import { resolveAvatarUrl } from "./social/avatarResolver.js";
-import { $, createElement } from "./shared/domUtils.js";
+import { $, $$, createElement, bindEvent, toggleClass, addClass } from "./shared/domUtils.js";
 import { resolveAppId, generateUUID, timeAgo } from "./utils/utils.js";
 import { StorageKeys, os, ServiceKeys } from "./framework.js";
 import { KeybindManager } from "./keybindManager.js";
@@ -16,11 +16,10 @@ import { fetchLiveStats } from "./analytics.js";
 import { liveActivityManager } from "./social/liveActivityManager.js";
 import { modeManager, MODES } from "./modeManager.js";
 import { applyMacSettings, disableMacSettings } from "./modes/macos/session.js";
-import { applyTilingSettings, disableTilingSettings } from "./modes/tiling/session.js";
 import { applyChromeOsSettings, disableChromeOsSettings } from "./modes/chromeos/session.js";
-import { applySteamDeckSettings, disableSteamDeckSettings } from "./modes/steamdeck/session.js";
+import { applyKaliSettings, disableKaliSettings } from "./modes/kali/session.js";
+import { playOsBootSplash } from "./modes/shared/osBootSplash.js";
 import { getRecentNews } from "./apps/news.js";
-import { setDeckBootVideoSkip } from "./modes/steamdeck/deckBootVideo.js";
 
 export class SessionManager {
   constructor(os) {
@@ -53,6 +52,14 @@ export class SessionManager {
       os.storage.set(StorageKeys.userId, userId);
     }
     return userId;
+  }
+
+  isMobileView() {
+    return (
+      window.innerWidth < 600 ||
+      document.documentElement.classList.contains("device-phone") ||
+      document.documentElement.classList.contains("is-mobile")
+    );
   }
 
   setupProfileUpdateListener() {
@@ -210,7 +217,6 @@ export class SessionManager {
           key: os.storage.get(StorageKeys.userId) || this.ensureUserId(),
           avatar: os.storage.get(StorageKeys.profilePicture) || PREDEFINED_AVATARS[0]
         };
-        setDeckBootVideoSkip(true);
         await this.initializeSession();
         return;
       }
@@ -332,6 +338,7 @@ export class SessionManager {
           <button class="action-button" id="action-button">
             ${this.getActionButtonText()}
           </button>
+          <div class="mobile-swipe-hint" id="mobile-swipe-hint"><i class="fas fa-chevron-up"></i><span>Swipe up to unlock</span></div>
 
           <div class="system-actions-row">
             <button class="system-icon" id="power-btn" title="Shutdown">
@@ -368,8 +375,8 @@ export class SessionManager {
                 <span>sitalOS</span>
               </button>
               <button type="button" class="session-mode-btn" data-mode="mac">
-                <svg viewBox="0 0 170 170" width="22" height="22" fill="currentColor" class="papirus-icon papirus-icon--22" style="display:inline-block;vertical-align:middle;" aria-hidden="true">
-                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.6-7.79-11.7-14.25-5.75-9.08-10.27-19.53-13.56-31.34-3.29-11.82-4.94-23.08-4.94-33.8 0-14.65 3.65-27.02 10.96-37.11 7.31-10.1 16.59-15.22 27.84-15.37 5.75 0 12.18 1.63 19.3 4.88 7.12 3.25 11.83 4.94 14.13 5.06 1.7.07 6.45-1.74 14.25-5.43 7.8-3.69 14.73-5.27 20.8-4.75 16.08 1.34 28.53 7.73 37.36 19.16-14.37 8.71-21.36 20.67-20.97 35.88.39 12.01 4.96 22.13 13.72 30.36 8.76 8.23 18.99 13.06 30.69 14.5-2.56 7.64-5.69 15.14-9.39 22.5zM119.22 31.84c0-7.39 2.76-14.52 8.28-21.39 5.52-6.87 12.38-11.37 20.58-13.5.78 4.22 1.17 8.44 1.17 12.66 0 7.42-2.77 14.63-8.31 21.63-5.54 7-12.65 11.54-21.33 13.62-.26-4.35-.39-8.69-.39-13.02z"/>
+                <svg viewBox="0 0 384 512" width="20" height="20" fill="currentColor" class="papirus-icon papirus-icon--22" style="display:inline-block;vertical-align:middle;" aria-hidden="true">
+                  <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
                 </svg>
                 <span>macOS</span>
               </button>
@@ -377,17 +384,9 @@ export class SessionManager {
                 <img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/apps/google-chrome.svg" class="papirus-icon papirus-icon--22" alt="" />
                 <span>Chrome OS</span>
               </button>
-              <button type="button" class="session-mode-btn" data-mode="tiling">
-                <img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/actions/view-grid.svg" class="papirus-icon papirus-icon--22" alt="" />
-                <span>Tiling</span>
-              </button>
-              <button type="button" class="session-mode-btn" data-mode="steamdeck">
-                <img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/apps/steam.svg" class="papirus-icon papirus-icon--22" alt="" />
-                <span>Deck</span>
-              </button>
-              <button type="button" class="session-mode-btn" data-mode="3d">
-                <img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/apps/kjumpingcube.svg" class="papirus-icon papirus-icon--22" alt="" />
-                <span>3D Fps Game</span>
+              <button type="button" class="session-mode-btn" data-mode="kali">
+                <img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/apps/distributor-logo-kali-linux.svg" class="papirus-icon papirus-icon--22" alt="" />
+                <span>Kali Linux</span>
               </button>
             </div>
           </div>
@@ -401,7 +400,7 @@ export class SessionManager {
           <span><strong>sitalOS desktop app</strong> Persistent storage, system tray, remote desktop, and faster performance.</span>
           <div class="electron-banner-actions">
             <span class="electron-download-link" id="electron-download-btn"><img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/actions/edit-download.svg" class="papirus-icon papirus-icon--22" alt="" /> Download</span>
-            <a href="https://github.com/reeyuki/yukios/releases" target="_blank" class="electron-releases-link">View all releases</a>
+            <a href="https://github.com/sitalcha/sitalOS/releases" target="_blank" class="electron-releases-link">View all releases</a>
           </div>
         </div>
         <a href="/features.html" class="session-features-link">Explore Features</a>
@@ -500,31 +499,11 @@ export class SessionManager {
               </div>
               <div class="settings-row">
                 <div class="settings-label-group">
-                  <span class="settings-label-title">Tiling</span>
-                  <span class="settings-label-desc">Window tiling manager layout</span>
+                  <span class="settings-label-title">Kali Linux</span>
+                  <span class="settings-label-desc">Offensive security and pentest desktop</span>
                 </div>
                 <label class="settings-toggle">
-                  <input type="checkbox" data-mode-toggle="tiling" />
-                  <span class="settings-track"><span class="settings-thumb"></span></span>
-                </label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-label-group">
-                  <span class="settings-label-title">3D Fps Game</span>
-                  <span class="settings-label-desc">First-person game mode</span>
-                </div>
-                <label class="settings-toggle">
-                  <input type="checkbox" data-mode-toggle="3d" />
-                  <span class="settings-track"><span class="settings-thumb"></span></span>
-                </label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-label-group">
-                  <span class="settings-label-title">Deck</span>
-                  <span class="settings-label-desc">Fullscreen handheld gaming shell</span>
-                </div>
-                <label class="settings-toggle">
-                  <input type="checkbox" data-mode-toggle="steamdeck" />
+                  <input type="checkbox" data-mode-toggle="kali" />
                   <span class="settings-track"><span class="settings-thumb"></span></span>
                 </label>
               </div>
@@ -626,6 +605,28 @@ export class SessionManager {
     this.applySessionPreferences();
     this.bindSettingsEvents();
 
+    let touchStartY = 0;
+    let touchMoveY = 0;
+    bindEvent(this.container, "touchstart", (event) => {
+      if (event.touches.length > 0) {
+        touchStartY = event.touches[0].clientY;
+        touchMoveY = touchStartY;
+      }
+    }, { passive: true });
+
+    bindEvent(this.container, "touchmove", (event) => {
+      if (event.touches.length > 0) {
+        touchMoveY = event.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    bindEvent(this.container, "touchend", () => {
+      if (this.signingIn) return;
+      if (touchStartY - touchMoveY > 50 && this.isMobileView()) {
+        this.signInAndExit();
+      }
+    });
+
     await this.applySessionWallpaper(this.container);
     await this.bindSessionEvents(onComplete);
     this.startClock();
@@ -678,18 +679,39 @@ export class SessionManager {
 
   async signInAndExit() {
     if (this.sessionState === "locked") {
+      if (this.isMobileView() && this.container) {
+        addClass(this.container, "unlocking");
+        await new Promise((resolve) => setTimeout(resolve, 400));
+      }
       this.unlockSession();
       if (this.onSessionComplete) this.onSessionComplete(this.currentSession);
       return;
     }
     if (!this.selectedUser) return;
+    const sessionToMode = {
+      "sital Desktop(Default)": "reset",
+      "sital Mac Desktop": "mac",
+      "sital Chrome OS": "chromeos",
+      "sital Kali Linux": "kali",
+      "Yuki Desktop(Default)": "reset",
+      "Yuki Mac Desktop": "mac",
+      "Yuki Chrome OS": "chromeos",
+      kali: "kali"
+    };
+    const targetMode = sessionToMode[this.selectedSession] || "reset";
+    if (!this.isMobileView() && (targetMode === "mac" || targetMode === "kali")) {
+      await playOsBootSplash(targetMode);
+    }
     this.currentSession = {
       name: this.selectedUser.name,
       key: this.selectedUser.key,
       avatar: this.selectedUser.avatar
     };
-    setDeckBootVideoSkip(false);
     await this.initializeSession();
+    if (this.isMobileView() && this.container) {
+      addClass(this.container, "unlocking");
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    }
     this.container.classList.add("exit");
     await new Promise((resolve) => setTimeout(resolve, 500));
     this.container.remove();
@@ -818,9 +840,7 @@ export class SessionManager {
         reset: modes.reset !== false,
         mac: modes.mac !== false,
         chromeos: modes.chromeos !== false,
-        tiling: modes.tiling !== false,
-        "3d": modes["3d"] !== false,
-        steamdeck: modes.steamdeck !== false
+        kali: modes.kali !== false
       },
       showSocial,
       showBanner
@@ -1090,6 +1110,15 @@ export class SessionManager {
 
     actionBtn.addEventListener("click", handleAction);
 
+    const mobileSwipeHint = $("#mobile-swipe-hint", this.container);
+    if (mobileSwipeHint) {
+      bindEvent(mobileSwipeHint, "click", () => {
+        if (!this.signingIn) {
+          this.signInAndExit();
+        }
+      });
+    }
+
     this.container.addEventListener("click", (e) => {
       if (e.target.closest("#avatar-edit-btn")) {
         avatarModal.style.display = "flex";
@@ -1146,41 +1175,35 @@ export class SessionManager {
       this.enterSleepMode();
     });
 
-    const sessionModes = this.container.querySelectorAll("#session-modes .session-mode-btn");
+    const sessionModes = $$("#session-modes .session-mode-btn", this.container);
     const modeToSession = {
       reset: "sital Desktop(Default)",
       mac: "sital Mac Desktop",
       chromeos: "sital Chrome OS",
-      tiling: "sital Tiling VM",
-      "3d": "sital 3D Desktop",
-      steamdeck: "sital Deck Mode"
+      kali: "sital Kali Linux"
     };
     const sessionToMode = {
       "sital Desktop(Default)": "reset",
       "sital Mac Desktop": "mac",
       "sital Chrome OS": "chromeos",
-      "sital Tiling VM": "tiling",
-      "sital 3D Desktop": "3d",
-      "sital Deck Mode": "steamdeck",
+      "sital Kali Linux": "kali",
       "Yuki Desktop(Default)": "reset",
       "Yuki Mac Desktop": "mac",
       "Yuki Chrome OS": "chromeos",
-      "Yuki Tiling VM": "tiling",
-      "Yuki 3D Desktop": "3d",
-      "Yuki Deck Mode": "steamdeck",
-      tiling: "tiling"
+      kali: "kali"
     };
     const activeMode = sessionToMode[this.selectedSession] || "reset";
     sessionModes.forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.mode === activeMode);
-      btn.addEventListener("click", () => {
+      toggleClass(btn, "active", btn.dataset.mode === activeMode);
+      const updateMode = () => {
         this.selectedSession = modeToSession[btn.dataset.mode];
         os.storage.set(StorageKeys.selectedSession, this.selectedSession);
-        sessionModes.forEach((b) => b.classList.toggle("active", b === btn));
-      });
-      btn.addEventListener("dblclick", () => {
-        this.selectedSession = modeToSession[btn.dataset.mode];
-        os.storage.set(StorageKeys.selectedSession, this.selectedSession);
+        sessionModes.forEach((b) => toggleClass(b, "active", b === btn));
+      };
+      bindEvent(btn, "click", updateMode);
+      bindEvent(btn, "touchend", updateMode);
+      bindEvent(btn, "dblclick", () => {
+        updateMode();
         this.signInAndExit();
       });
     });
@@ -1202,58 +1225,83 @@ export class SessionManager {
     document.addEventListener("keydown", this.keyboardHandler);
   }
 
+  triggerDownloadAsset(url, filename) {
+    const link = createElement("a");
+    link.href = url;
+    if (filename) {
+      link.download = filename;
+    }
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  setDownloadSuccessState(btn, originalText) {
+    if (!btn) return;
+    btn.innerHTML = `<img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/actions/object-select.svg" class="papirus-icon papirus-icon--22" alt="" /> Downloaded`;
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.pointerEvents = "";
+      btn.style.opacity = "";
+    }, 3000);
+  }
+
   async handleElectronDownload() {
     const btn = $("#electron-download-btn");
     if (!btn) return;
     const originalText = btn.innerHTML;
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Detecting...`;
+    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Downloading...`;
     btn.style.pointerEvents = "none";
     btn.style.opacity = "0.6";
 
+    const osName = this.detectElectronOS();
+    let targetName = "sitalOS.Setup.exe";
+    if (osName === "mac") {
+      targetName = "sitalOS.dmg";
+    } else if (osName === "linux") {
+      targetName = "sitalOS.AppImage";
+    }
+
+    const localUrl = `/downloads/${targetName}`;
+
     try {
-      const resp = await fetch("https://api.github.com/repos/reeyuki/yukios/releases/latest", {
-        headers: { Accept: "application/vnd.github.v3+json" }
-      });
-      if (!resp.ok) throw new Error(`GitHub API returned ${resp.status}`);
-      const release = await resp.json();
-
-      const os = this.detectElectronOS();
-      const asset = release.assets.find((a) => {
-        const name = a.name.toLowerCase();
-        if (os === "win") return name.endsWith(".exe") || name.endsWith(".exe");
-        if (os === "mac") return name.endsWith(".dmg");
-        if (os === "linux") return name.endsWith(".appimage");
-        return false;
-      });
-
-      if (!asset) {
-        window.open(release.html_url, "_blank");
+      let localResp = await fetch(localUrl, { method: "HEAD" }).catch(() => null);
+      if (!localResp || !localResp.ok) {
+        localResp = await fetch(localUrl).catch(() => null);
+      }
+      if (localResp && localResp.ok) {
+        this.triggerDownloadAsset(localUrl, targetName);
+        this.setDownloadSuccessState(btn, originalText);
         return;
       }
-
-      btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Downloading...`;
-      const a = createElement("a");
-      a.href = asset.browser_download_url;
-      a.download = asset.name;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      btn.innerHTML = `<img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/actions/object-select.svg" class="papirus-icon papirus-icon--22" alt="" /> Downloaded`;
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.pointerEvents = "";
-        btn.style.opacity = "";
-      }, 3000);
-    } catch (e) {
-      btn.innerHTML = `<img src="https://cdn.jsdelivr.net/gh/PapirusDevelopmentTeam/papirus-icon-theme@master/Papirus/22x22/status/dialog-warning.svg" class="papirus-icon papirus-icon--22" alt="" /> Failed`;
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.pointerEvents = "";
-        btn.style.opacity = "";
-      }, 3000);
-      window.open("https://github.com/reeyuki/yukios/releases", "_blank");
+    } catch (localErr) {
     }
+
+    try {
+      const resp = await fetch("https://api.github.com/repos/sitalcha/sitalOS/releases/latest", {
+        headers: { Accept: "application/vnd.github.v3+json" }
+      });
+      if (resp.ok) {
+        const release = await resp.json();
+        const asset = release.assets?.find((item) => {
+          const name = item.name.toLowerCase();
+          if (osName === "win") return name.endsWith(".exe");
+          if (osName === "mac") return name.endsWith(".dmg");
+          if (osName === "linux") return name.endsWith(".appimage");
+          return false;
+        });
+
+        if (asset) {
+          this.triggerDownloadAsset(asset.browser_download_url, asset.name);
+          this.setDownloadSuccessState(btn, originalText);
+          return;
+        }
+      }
+    } catch (releaseErr) {
+    }
+
+    this.triggerDownloadAsset(localUrl, targetName);
+    this.setDownloadSuccessState(btn, originalText);
   }
 
   detectElectronOS() {
@@ -1382,9 +1430,7 @@ export class SessionManager {
     }
     this.addToUserHistory(this.currentSession);
 
-    if (this.selectedSession !== "sital 3D Desktop" && this.selectedSession !== "Yuki 3D Desktop") {
-      await os.fs.setSession(name);
-    }
+    await os.fs.setSession(name);
 
     os.events.emit(BusEvents.SESSION_INITIALIZED, this.currentSession);
     liveActivityManager.init();
@@ -1395,28 +1441,16 @@ export class SessionManager {
       disableMacSettings();
     }
 
-    if (this.selectedSession === "sital Tiling VM" || this.selectedSession === "Yuki Tiling VM" || this.selectedSession === "tiling") {
-      applyTilingSettings();
-    } else {
-      disableTilingSettings();
-    }
-
     if (this.selectedSession === "sital Chrome OS" || this.selectedSession === "Yuki Chrome OS") {
       applyChromeOsSettings();
     } else {
       disableChromeOsSettings();
     }
 
-    if (this.selectedSession === "sital Deck Mode" || this.selectedSession === "Yuki Deck Mode") {
-      applySteamDeckSettings();
+    if (this.selectedSession === "sital Kali Linux" || this.selectedSession === "kali") {
+      applyKaliSettings();
     } else {
-      disableSteamDeckSettings();
-    }
-
-    if (this.selectedSession === "sital 3D Desktop" || this.selectedSession === "Yuki 3D Desktop") {
-      await this.apply3DSettings();
-    } else {
-      this.disable3DSettings();
+      disableKaliSettings();
     }
 
     os.window.setFileSystemManager(os.fileSystemManager);
@@ -1430,29 +1464,6 @@ export class SessionManager {
     this.launchStartupApps();
 
     this.startIdleDetection();
-  }
-
-  async apply3DSettings() {
-    modeManager.enter(MODES["3D"]);
-    const app = this.os.app.getInstance(ServiceKeys.ROOM3D);
-    if (app) {
-      try {
-        await app.launchSystemMode(() => {
-          this.disable3DSettings();
-        });
-      } catch (e) {
-        console.error("3D room launch failed:", e);
-        this.disable3DSettings();
-      }
-    }
-  }
-
-  disable3DSettings() {
-    modeManager.exit(MODES["3D"]);
-    const app = this.os.app.getInstance(ServiceKeys.ROOM3D);
-    if (app) {
-      app.exitSystemMode();
-    }
   }
 
   launchStartupApps() {
@@ -1515,6 +1526,9 @@ export class SessionManager {
     this.isLocked = false;
 
     if (this.container) {
+      if (this.isMobileView()) {
+        addClass(this.container, "unlocking");
+      }
       this.container.classList.add("exit");
       setTimeout(() => {
         this.container.remove();

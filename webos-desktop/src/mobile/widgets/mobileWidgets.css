@@ -1,0 +1,311 @@
+.mobile-widget {
+  width: 100%;
+  box-sizing: border-box;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.mobile-pixel-clock-widget {
+  padding: 18px 12px 10px 12px;
+  text-align: center;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: var(--r-xl);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.mobile-pixel-clock-widget:active {
+  transform: scale(0.98);
+  background: var(--glass);
+}
+
+.mobile-clock-time {
+  font-size: 46px;
+  font-weight: 300;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+}
+
+.mobile-clock-subinfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.mobile-clock-date {
+  font-weight: 500;
+}
+
+.mobile-clock-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--r-full);
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mobile-weather-widget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--glass-strong);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 14px 18px;
+  margin: 6px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.mobile-weather-widget:active {
+  transform: scale(0.98);
+  background: var(--surface-hover);
+}
+
+.mobile-weather-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-weather-temp {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.mobile-weather-condition {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.mobile-weather-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--brand);
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.mobile-weather-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-weather-icon {
+  font-size: 38px;
+  color: var(--brand);
+  filter: drop-shadow(0 2px 8px var(--brand-glow));
+}
+
+.mobile-calendar-widget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 12px 16px;
+  margin: 6px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.mobile-calendar-widget:active {
+  transform: scale(0.98);
+  background: var(--surface-hover);
+}
+
+.mobile-calendar-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--brand);
+}
+
+.mobile-calendar-badge-day {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mobile-calendar-badge-date {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.mobile-calendar-details {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-calendar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-calendar-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-kali-widget {
+  background: rgba(12, 16, 24, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: 20px;
+  padding: 14px;
+  margin: 6px 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-kali-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+  padding-bottom: 8px;
+}
+
+.mobile-kali-header-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #00f0ff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-kali-launch-btn {
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f0ff;
+  padding: 4px 10px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.mobile-kali-launch-btn:active {
+  transform: scale(0.95);
+  background: rgba(0, 240, 255, 0.25);
+}
+
+.mobile-kali-preview {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--r-md);
+  padding: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: #a0aec0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-kali-prompt {
+  color: #00f0ff;
+  font-weight: 600;
+}
+
+.mobile-kali-cmd {
+  color: #ffffff;
+}
+
+.mobile-kali-output {
+  color: #718096;
+  margin-top: 4px;
+}
+
+.mobile-kali-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.mobile-kali-tool-card {
+  background: rgba(17, 24, 34, 0.8);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: var(--r-md);
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  text-align: center;
+}
+
+.mobile-kali-tool-card:active {
+  transform: scale(0.94);
+  border-color: #00f0ff;
+  background: rgba(0, 240, 255, 0.15);
+}
+
+.mobile-kali-tool-icon {
+  font-size: 16px;
+  color: #00f0ff;
+}
+
+.mobile-kali-tool-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}

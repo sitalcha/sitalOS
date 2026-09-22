@@ -23,6 +23,8 @@ export class MenuBarManager {
     this.boundKeydown = this.onKeydown.bind(this);
     this.boundModeEntered = this.onModeEntered.bind(this);
     this.boundModeExited = this.onModeExited.bind(this);
+    this.boundMusicState = this.onMusicStateChanged.bind(this);
+    this.musicAutoplayWired = false;
   }
 
   init() {
@@ -31,10 +33,12 @@ export class MenuBarManager {
     this.wireAppleLogo();
     if (this.isEnabled()) {
       this.enable();
+      this.attachMusicAutoplayListener();
     } else {
       this.renderMenuBar();
       this.wireMenuItems();
       this.wireFinderItem();
+      this.setupNowPlaying();
     }
   }
 
@@ -44,10 +48,14 @@ export class MenuBarManager {
     this.renderMenuBar();
     this.wireMenuItems();
     this.wireFinderItem();
+    this.setupNowPlaying();
     this.os.events.on(BusEvents.WINDOW_FOCUSED, this.boundFocus);
     this.os.events.on(BusEvents.WINDOW_CLOSED, this.boundClosed);
+    this.os.events.on("music:state-changed", this.boundMusicState);
+    this.os.events.on("music:track-changed", this.boundMusicState);
     bindEvent(document, "click", this.boundClick);
     bindEvent(document, "keydown", this.boundKeydown);
+    this.attachMusicAutoplayListener();
   }
 
   disable() {
@@ -56,12 +64,17 @@ export class MenuBarManager {
     this.hideMenu();
     this.os.events.off(BusEvents.WINDOW_FOCUSED, this.boundFocus);
     this.os.events.off(BusEvents.WINDOW_CLOSED, this.boundClosed);
+    this.os.events.off("music:state-changed", this.boundMusicState);
+    this.os.events.off("music:track-changed", this.boundMusicState);
     document.removeEventListener("click", this.boundClick);
     document.removeEventListener("keydown", this.boundKeydown);
   }
 
   onModeEntered({ id }) {
-    if (id === MODES.MAC) this.enable();
+    if (id === MODES.MAC) {
+      this.enable();
+      this.attachMusicAutoplayListener();
+    }
   }
 
   onModeExited({ id }) {
@@ -214,6 +227,8 @@ export class MenuBarManager {
       });
       menuBar.appendChild(span);
     });
+
+    this.setupNowPlaying();
   }
 
   wireMenuItems() {
@@ -424,6 +439,97 @@ export class MenuBarManager {
     if (win) {
       os.window.bringToFront(win);
     }
+  }
+
+  setupNowPlaying() {
+    const menuBar = $("#mac-menu-bar");
+    if (!menuBar) return;
+    let nowPlaying = $(".mac-menu-now-playing", menuBar);
+    if (!nowPlaying) {
+      nowPlaying = createElement("div", {
+        className: "mac-menu-now-playing",
+        attributes: { title: "Now Playing" }
+      });
+      for (let i = 1; i <= 4; i++) {
+        const bar = createElement("span", { className: `mac-audio-bar bar-${i}` });
+        nowPlaying.appendChild(bar);
+      }
+      menuBar.appendChild(nowPlaying);
+    }
+
+    if (nowPlaying.dataset.wired !== "true") {
+      nowPlaying.dataset.wired = "true";
+      bindEvent(nowPlaying, "click", (e) => {
+        e.stopPropagation();
+        this.focusOrLaunchMusicApp();
+      });
+    }
+
+    this.updateNowPlayingIndicator();
+  }
+
+  focusOrLaunchMusicApp() {
+    const openWins = this.os.window.getOpenWindows();
+    let musicWin = null;
+    if (openWins && openWins.forEach) {
+      openWins.forEach((win, winId) => {
+        if (!musicWin && (win?.dataset?.appId === "musicPlayerApp" || winId.includes("music"))) {
+          musicWin = win;
+        }
+      });
+    }
+    if (musicWin) {
+      this.os.window.bringToFront(musicWin);
+    } else {
+      this.os.app.launch("musicPlayerApp").catch(() => {});
+    }
+  }
+
+  onMusicStateChanged(data) {
+    this.updateNowPlayingIndicator(data);
+  }
+
+  updateNowPlayingIndicator(data) {
+    const indicator = $(".mac-menu-now-playing");
+    if (!indicator) return;
+
+    let isPlaying = false;
+    if (data && typeof data.isPlaying === "boolean") {
+      isPlaying = data.isPlaying;
+    } else if (window.__sitalMusicService) {
+      const service = window.__sitalMusicService;
+      if (typeof service.isPlaying === "function") {
+        isPlaying = service.isPlaying();
+      } else if (typeof service.isPlaying === "boolean") {
+        isPlaying = service.isPlaying;
+      }
+    }
+
+    toggleClass(indicator, "is-playing", isPlaying);
+    toggleClass(indicator, "playing", isPlaying);
+  }
+
+  attachMusicAutoplayListener() {
+    if (this.musicAutoplayWired) return;
+    this.musicAutoplayWired = true;
+
+    const handleUserInteraction = () => {
+      document.removeEventListener("pointerdown", handleUserInteraction);
+      document.removeEventListener("keydown", handleUserInteraction);
+      const isConfigured = os.storage.get("macMusicAutoplay") === "true" ||
+                           os.storage.get("musicAutoplay") === "true" ||
+                           Boolean(window.__sitalMusicAutoplay);
+      if (isConfigured) {
+        if (window.__sitalMusicService?.play) {
+          window.__sitalMusicService.play();
+        } else {
+          this.os.events.emit("music:play");
+        }
+      }
+    };
+
+    document.addEventListener("pointerdown", handleUserInteraction, { once: true });
+    document.addEventListener("keydown", handleUserInteraction, { once: true });
   }
 }
 

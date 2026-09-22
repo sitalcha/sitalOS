@@ -19,7 +19,9 @@ export const ServiceKeys = {
   REMOTE_HOST: "remoteHostApp",
   CLIPBOARD_MANAGER: "clipboardManagerApp",
   DESKTOP_UI: "desktopUI",
-  INSTALLED_APPS: "systemAppsApp"
+  INSTALLED_APPS: "systemAppsApp",
+  MUSIC_PLAYER: "musicPlayerApp",
+  KAGAJ_AI: "kagajAiApp"
 };
 
 /**

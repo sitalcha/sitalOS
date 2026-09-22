@@ -17,6 +17,7 @@ export const StorageKeys = {
   macOsControls: "yukiOS_macOsControls",
   windowHeaderStyle: "yukiOS_window_header_style",
   chromeOsMode: "yukiOS_chrome_os_mode",
+  kaliMode: "yukiOS_kali_mode",
   clippy: "yukiOS_clippy",
   disableDesktopStretchScroll: "yukiOS_disable_desktop_stretch_scroll",
   calendarEvents: "yukiOS_calendar_events",
@@ -236,6 +237,7 @@ export const StorageKeys = {
   dockScale: "yukiOS_dock_scale",
   dockAnimationSpeed: "yukiOS_dock_animation_speed",
   macWallpaperInitialized: "yukiOS_mac_wallpaper_initialized",
+  macWidgets: "yukiOS_mac_widgets",
   tilingEnabled: "yukiOS_tiling_enabled",
   tilingGaps: "yukiOS_tiling_gaps",
   tilingSplitRatio: "yukiOS_tiling_split_ratio",
@@ -310,7 +312,10 @@ export const StorageKeys = {
   appCustomIcons: "yukiOS_app_custom_icons",
   appCustomTitles: "yukiOS_app_custom_titles",
   macPrevTaskbar: "yukiOS_mac_prev_taskbar",
+  macPrevOpenAnimation: "yukiOS_mac_prev_open_animation",
   papirusVariant: "yukiOS_papirus_variant",
   papirusEnabled: "yukiOS_papirus_enabled",
-  iconPack: "yukiOS_icon_pack"
+  iconPack: "yukiOS_icon_pack",
+  kagajApiKey: "sitalOS_kagaj_gemini_key",
+  kagajModel: "sitalOS_kagaj_gemini_model"
 };

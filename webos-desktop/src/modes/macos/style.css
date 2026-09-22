@@ -57,14 +57,18 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
 }
 
 .mac-dock {
-  --inset: 7px;
   position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  gap: 3px;
-  padding: 3px 10px;
-  backdrop-filter: blur(40px) saturate(1.8);
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(32, 32, 38, 0.65);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 15px;
+  border-radius: 20px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   z-index: 20001;
   transition:
@@ -74,25 +78,25 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
 }
 
 .mac-dock[data-position="bottom"] {
-  bottom: var(--inset);
+  bottom: 10px;
   left: 50%;
-  transform: translateX(-50%) scale(var(--dock-scale));
+  transform: translateX(-50%);
   flex-direction: row;
   align-items: flex-end;
 }
 
 .mac-dock[data-position="left"] {
-  left: var(--inset);
+  left: 10px;
   top: 50%;
-  transform: translateY(-50%) scale(var(--dock-scale));
+  transform: translateY(-50%);
   flex-direction: column;
   align-items: flex-start;
 }
 
 .mac-dock[data-position="right"] {
-  right: var(--inset);
+  right: 10px;
   top: 50%;
-  transform: translateY(-50%) scale(var(--dock-scale));
+  transform: translateY(-50%);
   flex-direction: column;
   align-items: flex-end;
 }
@@ -107,7 +111,7 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
 .mac-dock.dock-auto-hide.dock-hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-50%) scale(var(--dock-scale)) translateY(20px);
+  transform: translateX(-50%) translateY(20px);
 }
 
 .mac-dock.dock-auto-hide.dock-hidden:hover {
@@ -116,11 +120,11 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
 }
 
 .mac-dock[data-position="left"].dock-auto-hide.dock-hidden {
-  transform: translateY(-50%) scale(var(--dock-scale)) translateX(-20px);
+  transform: translateY(-50%) translateX(-20px);
 }
 
 .mac-dock[data-position="right"].dock-auto-hide.dock-hidden {
-  transform: translateY(-50%) scale(var(--dock-scale)) translateX(20px);
+  transform: translateY(-50%) translateX(20px);
 }
 
 .dock-item {
@@ -130,10 +134,6 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
   padding: 2px;
   cursor: pointer;
   position: relative;
-}
-
-.mac-dock.dock-magnify .dock-item {
-  transition: transform var(--dock-anim-speed) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .mac-dock[data-position="left"] .dock-item,
@@ -150,13 +150,20 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
   height: var(--dock-icon-size);
   border-radius: 10px;
   overflow: visible;
-  transition: transform var(--dock-anim-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform-origin: center bottom;
+  transform-origin: bottom center;
+  transition: transform 0.15s ease-out;
 }
 
-.mac-dock[data-position="left"] .dock-icon-wrap,
+.mac-dock:hover .dock-icon-wrap {
+  transition: none;
+}
+
+.mac-dock[data-position="left"] .dock-icon-wrap {
+  transform-origin: center left;
+}
+
 .mac-dock[data-position="right"] .dock-icon-wrap {
-  transform-origin: center center;
+  transform-origin: center right;
 }
 
 .dock-icon-inner {
@@ -199,28 +206,36 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
 
 .dock-running-dot {
   position: absolute;
-  bottom: -9px;
+  bottom: -5px;
   left: 50%;
   transform: translateX(-50%);
-  width: 5px;
-  height: 5px;
-  border-radius: 25px;
-  background: var(--text-primary);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffffff;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
 }
 
-.mac-dock[data-position="left"] .dock-running-dot,
+.mac-dock[data-position="left"] .dock-running-dot {
+  bottom: auto;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .mac-dock[data-position="right"] .dock-running-dot {
   bottom: auto;
   left: auto;
-  right: -9px;
+  right: -5px;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .dock-item.active .dock-running-dot,
-.dock-pinned.active .dock-running-dot {
+.dock-item.has-running .dock-running-dot,
+.dock-pinned.active .dock-running-dot,
+.dock-pinned.has-running .dock-running-dot {
   opacity: 1;
 }
 
@@ -271,16 +286,26 @@ html.transparent-ui.tp-start-menu[data-theme="macos-fluent"] .start-menu {
   transform: translateX(-50%) translateY(0) scale(1);
 }
 
-.mac-dock.dock-magnify .dock-icon-wrap {
-  transition: transform var(--dock-anim-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+@keyframes dockBounce {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  25% {
+    transform: translateY(-18px) scale(1.06);
+  }
+  50% {
+    transform: translateY(0) scale(0.96);
+  }
+  75% {
+    transform: translateY(-8px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
 }
 
-.mac-dock:not(.dock-magnify) .dock-item {
-  transition: none;
-}
-
-.mac-dock:not(.dock-magnify) .dock-icon-wrap {
-  transition: none;
+.dock-icon-wrap.dock-bouncing {
+  animation: dockBounce 0.6s cubic-bezier(0.28, 0.84, 0.42, 1) !important;
 }
 
 @keyframes toastInMac {
@@ -548,11 +573,16 @@ html.mac-mode .desktop-peek-btn {
 }
 
 .mac-mode #taskbar {
-  --taskbar-h: 2.1em;
+  --taskbar-h: 28px;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 10px !important;
+  box-sizing: border-box !important;
   z-index: 20001 !important;
-  background: rgb(28 28 32 / 60%) !important;
-  backdrop-filter: blur(40px) saturate(1.4) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(1.4) !important;
+  background: rgba(28, 28, 32, 0.75) !important;
+  backdrop-filter: blur(30px) saturate(1.8) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(1.8) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.04),
@@ -573,9 +603,10 @@ html.mac-mode .desktop-peek-btn {
 .mac-mode .mac-menu-item {
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 9px;
   height: 100%;
-  font-size: 13.5px;
+  font-size: 13px;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.88);
   cursor: pointer;
   white-space: nowrap;
@@ -585,14 +616,20 @@ html.mac-mode .desktop-peek-btn {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
 }
 
+.mac-mode .mac-menu-item:nth-child(2),
+.mac-mode .mac-menu-item[data-menu="Finder"] {
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
 .mac-mode .mac-menu-item.mac-menu-apple {
-  width: 48px;
+  width: 36px;
   padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 15px;
 }
 
 .mac-mode .mac-menu-item.mac-menu-apple:hover {
@@ -609,6 +646,65 @@ html.mac-mode .desktop-peek-btn {
 
 .mac-mode .mac-menu-item:active {
   background: rgba(255, 255, 255, 0.18);
+}
+
+.mac-mode .mac-menu-now-playing {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  height: 100%;
+  padding: 0 8px;
+  margin-left: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.12s ease;
+}
+
+.mac-mode .mac-menu-now-playing:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.mac-mode .mac-audio-bar {
+  width: 2.5px;
+  height: 4px;
+  background-color: var(--brand, #1db954);
+  border-radius: 1px;
+  transition: height 0.2s ease, opacity 0.2s ease;
+  opacity: 0.5;
+}
+
+.mac-mode .mac-menu-now-playing.is-playing .mac-audio-bar,
+.mac-mode .mac-menu-now-playing.playing .mac-audio-bar {
+  opacity: 1;
+  animation: audioWave 1.2s ease-in-out infinite alternate;
+}
+
+.mac-mode .mac-audio-bar.bar-1 {
+  animation-delay: 0s;
+}
+
+.mac-mode .mac-audio-bar.bar-2 {
+  animation-delay: 0.2s;
+}
+
+.mac-mode .mac-audio-bar.bar-3 {
+  animation-delay: 0.4s;
+}
+
+.mac-mode .mac-audio-bar.bar-4 {
+  animation-delay: 0.15s;
+}
+
+@keyframes audioWave {
+  0% {
+    height: 4px;
+  }
+  50% {
+    height: 14px;
+  }
+  100% {
+    height: 6px;
+  }
 }
 
 .mac-mode #start-button {
@@ -916,4 +1012,43 @@ html[data-theme].mac-mode[data-theme-mode="light"] #context-menu.context-menu-gl
 .mac-mode .mac-menu-item.active {
   background: rgba(110, 120, 255, 0.3) !important;
   color: #fff !important;
+}
+
+html.mac-mode .window {
+  border-radius: 10px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  overflow: hidden;
+}
+
+html.mac-mode .window-header,
+.window-header.mac-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  position: relative !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+  background: rgba(36, 36, 40, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html.mac-mode .window-header > .window-controls,
+.window-header.mac-header > .window-controls {
+  order: -1 !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+html.mac-mode .window-header > span,
+.window-header.mac-header > span {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  pointer-events: none !important;
 }

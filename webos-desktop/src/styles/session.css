@@ -1171,3 +1171,380 @@
 .session-features-link:hover {
   color: rgba(255, 255, 255, 0.7);
 }
+
+.session-overlay.unlocking {
+  transform: scale(1.08);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+@keyframes swipeHint {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.mobile-swipe-hint {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  margin-top: 8px;
+  animation: swipeHint 1.8s ease-in-out infinite;
+}
+
+.mobile-swipe-hint i {
+  font-size: 16px;
+}
+
+html.device-phone .session-overlay,
+html.is-mobile .session-overlay {
+  padding: 16px 12px;
+  overflow: hidden;
+}
+
+html.device-phone .session-overlay .session-content,
+html.is-mobile .session-overlay .session-content {
+  height: 100%;
+  max-height: 100dvh;
+  justify-content: space-between;
+  gap: 16px;
+  padding: env(safe-area-inset-top, 24px) 12px env(safe-area-inset-bottom, 20px);
+  box-sizing: border-box;
+}
+
+html.device-phone .session-overlay .session-time,
+html.is-mobile .session-overlay .session-time {
+  font-size: 60px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+}
+
+html.device-phone .session-overlay .session-date,
+html.is-mobile .session-overlay .session-date {
+  font-size: 17px;
+  font-weight: 500;
+  margin-top: -8px;
+  margin-bottom: 0;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+}
+
+html.device-phone .session-overlay .user-carousel-row,
+html.is-mobile .session-overlay .user-carousel-row {
+  padding: 0;
+  width: auto;
+  max-width: 100%;
+  justify-content: center;
+  overflow: visible;
+  margin: auto 0 0;
+}
+
+html.device-phone .session-overlay .user-carousel-tile:not(.selected),
+html.is-mobile .session-overlay .user-carousel-tile:not(.selected) {
+  display: none;
+}
+
+html.device-phone .session-overlay .user-carousel-tile.selected,
+html.is-mobile .session-overlay .user-carousel-tile.selected {
+  opacity: 1;
+  transform: none;
+  gap: 12px;
+}
+
+html.device-phone .session-overlay .user-carousel-tile img,
+html.device-phone .session-overlay .user-carousel-tile.selected img,
+html.is-mobile .session-overlay .user-carousel-tile img,
+html.is-mobile .session-overlay .user-carousel-tile.selected img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--brand);
+  box-shadow: 0 0 24px var(--brand-glow);
+}
+
+html.device-phone .session-overlay .user-carousel-tile.selected span,
+html.is-mobile .session-overlay .user-carousel-tile.selected span {
+  font-size: 17px;
+  font-weight: 600;
+  opacity: 1;
+}
+
+html.device-phone .session-overlay .login-center-panel,
+html.is-mobile .session-overlay .login-center-panel {
+  gap: 14px;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 0 auto;
+}
+
+html.device-phone .session-overlay .action-button,
+html.is-mobile .session-overlay .action-button {
+  width: 100%;
+  min-width: 220px;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 28px;
+}
+
+html.device-phone .session-overlay .mobile-swipe-hint,
+html.is-mobile .session-overlay .mobile-swipe-hint {
+  display: flex;
+}
+
+html.device-phone .session-overlay .session-selector,
+html.is-mobile .session-overlay .session-selector {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  width: 100%;
+  max-width: 100vw;
+  margin-top: auto;
+  padding: 0 8px 12px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+html.device-phone .session-overlay .session-modes,
+html.is-mobile .session-overlay .session-modes {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+html.device-phone .session-overlay .session-modes::-webkit-scrollbar,
+html.is-mobile .session-overlay .session-modes::-webkit-scrollbar {
+  display: none;
+}
+
+html.device-phone .session-overlay .session-modes-grid,
+html.is-mobile .session-overlay .session-modes-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
+}
+
+html.device-phone .session-overlay .session-mode-btn,
+html.is-mobile .session-overlay .session-mode-btn {
+  flex-direction: row;
+  min-width: auto;
+  padding: 8px 14px;
+  gap: 8px;
+  border-radius: 20px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+html.device-phone .session-overlay .session-mode-btn.active,
+html.is-mobile .session-overlay .session-mode-btn.active {
+  border-color: var(--brand);
+  background: color-mix(in srgb, var(--brand) 25%, transparent);
+  color: var(--text-primary);
+  box-shadow: 0 0 12px var(--brand-glow);
+}
+
+html.device-phone .session-overlay .session-mode-btn img,
+html.device-phone .session-overlay .session-mode-btn svg,
+html.is-mobile .session-overlay .session-mode-btn img,
+html.is-mobile .session-overlay .session-mode-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+html.device-phone .session-overlay .system-actions-row,
+html.device-phone .session-overlay .remember-me-row,
+html.device-phone .session-overlay .session-extra > a,
+html.device-phone .session-overlay .session-status-widget,
+html.device-phone .session-overlay .session-electron-banner,
+html.device-phone .session-overlay .session-features-link,
+html.device-phone .session-overlay .session-settings-btn,
+html.is-mobile .session-overlay .system-actions-row,
+html.is-mobile .session-overlay .remember-me-row,
+html.is-mobile .session-overlay .session-extra > a,
+html.is-mobile .session-overlay .session-status-widget,
+html.is-mobile .session-overlay .session-electron-banner,
+html.is-mobile .session-overlay .session-features-link,
+html.is-mobile .session-overlay .session-settings-btn {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .session-overlay {
+    padding: 16px 12px;
+    overflow: hidden;
+  }
+
+  .session-overlay .session-content {
+    height: 100%;
+    max-height: 100dvh;
+    justify-content: space-between;
+    gap: 16px;
+    padding: env(safe-area-inset-top, 24px) 12px env(safe-area-inset-bottom, 20px);
+    box-sizing: border-box;
+  }
+
+  .session-overlay .session-time {
+    font-size: 60px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+  }
+
+  .session-overlay .session-date {
+    font-size: 17px;
+    font-weight: 500;
+    margin-top: -8px;
+    margin-bottom: 0;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+  }
+
+  .session-overlay .user-carousel-row {
+    padding: 0;
+    width: auto;
+    max-width: 100%;
+    justify-content: center;
+    overflow: visible;
+    margin: auto 0 0;
+  }
+
+  .session-overlay .user-carousel-tile:not(.selected) {
+    display: none;
+  }
+
+  .session-overlay .user-carousel-tile.selected {
+    opacity: 1;
+    transform: none;
+    gap: 12px;
+  }
+
+  .session-overlay .user-carousel-tile img,
+  .session-overlay .user-carousel-tile.selected img {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--brand);
+    box-shadow: 0 0 24px var(--brand-glow);
+  }
+
+  .session-overlay .user-carousel-tile.selected span {
+    font-size: 17px;
+    font-weight: 600;
+    opacity: 1;
+  }
+
+  .session-overlay .login-center-panel {
+    gap: 14px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 0 auto;
+  }
+
+  .session-overlay .action-button {
+    width: 100%;
+    min-width: 220px;
+    padding: 14px 28px;
+    font-size: 16px;
+    border-radius: 28px;
+  }
+
+  .session-overlay .mobile-swipe-hint {
+    display: flex;
+  }
+
+  .session-overlay .session-selector {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    max-width: 100vw;
+    margin-top: auto;
+    padding: 0 8px 12px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+  }
+
+  .session-overlay .session-modes {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+  }
+
+  .session-overlay .session-modes::-webkit-scrollbar {
+    display: none;
+  }
+
+  .session-overlay .session-modes-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .session-overlay .session-mode-btn {
+    flex-direction: row;
+    min-width: auto;
+    padding: 8px 14px;
+    gap: 8px;
+    border-radius: 20px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(16px);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+
+  .session-overlay .session-mode-btn.active {
+    border-color: var(--brand);
+    background: color-mix(in srgb, var(--brand) 25%, transparent);
+    color: var(--text-primary);
+    box-shadow: 0 0 12px var(--brand-glow);
+  }
+
+  .session-overlay .session-mode-btn img,
+  .session-overlay .session-mode-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .session-overlay .system-actions-row,
+  .session-overlay .remember-me-row,
+  .session-overlay .session-extra > a,
+  .session-overlay .session-status-widget,
+  .session-overlay .session-electron-banner,
+  .session-overlay .session-features-link,
+  .session-overlay .session-settings-btn {
+    display: none !important;
+  }
+}
+

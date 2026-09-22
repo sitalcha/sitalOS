@@ -271,7 +271,7 @@ export class AppLauncher {
         });
       } else if (info.action) {
         await info.action.call(this, appExtra);
-      } else if (info.launchType === "instance") {
+      } else if (info.launchType === "instance" || info.launchType === "singleton") {
         const appInstance = this.appRegistry.get(app);
         if (appInstance) {
           await appInstance.open(appExtra);
