@@ -11,6 +11,11 @@ export class ModeAPI {
     return modeManager.getActiveModes();
   }
 
+  getActive() {
+    const modes = modeManager.getActiveModes();
+    return modes && modes.length > 0 ? modes[0] : "default";
+  }
+
   enter(id) {
     modeManager.enter(id);
   }

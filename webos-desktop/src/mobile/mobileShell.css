@@ -2,11 +2,21 @@ html.device-phone {
   --mobile-status-height: 44px;
 }
 
+html.device-phone,
+html.device-phone body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 html.device-phone #taskbar {
   display: none !important;
 }
 
-html.device-phone .desktop {
+html.device-phone .desktop,
+html.device-phone #desktop {
+  background-color: var(--bg-base);
   padding-bottom: 0 !important;
 }
 
@@ -21,9 +31,14 @@ html.device-phone .window {
   z-index: 1000 !important;
   display: flex !important;
   flex-direction: column !important;
+  background-color: var(--bg-base);
+  contain: layout style;
 }
 
-html.device-phone .window[style*="display: none"] {
+html.device-phone .window[style*="display: none"],
+html.device-phone .window.minimized,
+html.device-phone .window[hidden],
+html.device-phone .window.is-hidden {
   display: none !important;
 }
 
@@ -33,6 +48,54 @@ html.device-phone .window .window-header {
 
 html.device-phone .window .window-resizer {
   display: none !important;
+}
+
+html.device-phone .window-body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+html.device-phone iframe {
+  background-color: var(--bg-base);
+  color-scheme: dark;
+}
+
+button,
+.mobile-app-item,
+.mobile-dock-item,
+.mobile-cc-tile,
+.mobile-nav-back-btn,
+.mobile-nav-close-btn,
+.mobile-quick-btn,
+.mobile-drawer-trigger-btn,
+.mobile-spotlight-btn,
+.pixel-search-pill,
+.pixel-at-a-glance,
+.mobile-dynamic-island,
+.mobile-home-indicator,
+.mobile-home-indicator-ios,
+.mobile-page-dot,
+.mobile-switcher-card,
+.mobile-switcher-clear-btn,
+.mobile-action-modal-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mobile-app-drawer,
+#mobile-control-center,
+#mobile-app-switcher,
+.mobile-pages-track,
+.mobile-action-modal,
+.mobile-modal-sheet {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .mobile-nav-header {
@@ -65,6 +128,7 @@ html.device-phone .window .window-resizer {
   min-width: 44px;
   min-height: 44px;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-nav-back-btn:active,
@@ -84,24 +148,65 @@ html.device-phone .window .window-resizer {
   text-align: center;
 }
 
-.mobile-home-indicator {
+.mobile-home-indicator,
+.mobile-home-indicator-ios {
   position: fixed;
   bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
   width: 134px;
   height: 5px;
-  background: rgba(255, 255, 255, 0.65);
-  border-radius: var(--r-full);
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 100px;
   z-index: 2005;
   pointer-events: auto;
   cursor: pointer;
   transition: transform 0.15s ease, background-color 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.mobile-home-indicator:active {
+.mobile-home-indicator:active,
+.mobile-home-indicator-ios:active {
   transform: translateX(-50%) scale(1.1);
   background: var(--brand);
+}
+
+.mobile-dynamic-island {
+  background: #000;
+  color: #fff;
+  width: 110px;
+  height: 30px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  margin: 0 auto;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  cursor: pointer;
+  user-select: none;
+  z-index: 2200;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-dynamic-island.active,
+.mobile-dynamic-island.expanded,
+.mobile-dynamic-island:active {
+  width: 190px;
+  height: 36px;
+  border-radius: 22px;
+}
+
+.mobile-camera-punch {
+  width: 11px;
+  height: 11px;
+  background: #000;
+  border-radius: 50%;
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 #mobile-status-bar {
@@ -139,6 +244,8 @@ html.device-phone .window .window-resizer {
   cursor: pointer;
   min-height: 44px;
   padding: 0 4px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-status-right:active {
@@ -188,6 +295,115 @@ html.device-phone .window .window-resizer {
   margin-top: 2px;
 }
 
+.pixel-at-a-glance {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pixel-glance-date {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.pixel-glance-sub {
+  font-size: 14px;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pixel-search-pill {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2328;
+  border-radius: 28px;
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 12px 10px 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-size: 14px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pixel-search-pill:active {
+  transform: scale(0.98);
+}
+
+.pixel-search-pill .pixel-search-g,
+.pixel-search-pill .pixel-search-google,
+.pixel-search-pill i.fa-google,
+.pixel-search-pill .google-icon {
+  color: #4285f4;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.pixel-search-pill .pixel-search-mic,
+.pixel-search-pill i.fa-microphone {
+  color: #ea4335;
+  font-size: 16px;
+}
+
+.pixel-search-pill .pixel-search-lens,
+.pixel-search-pill i.fa-camera,
+.pixel-search-pill i.fa-circle-dot {
+  color: #34a853;
+  font-size: 16px;
+}
+
+.pixel-search-pill-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.mobile-quick-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 6px 0 10px 0;
+}
+
+.mobile-quick-btn {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.mobile-quick-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.22);
+}
+
 .mobile-music-widget {
   display: flex;
   align-items: center;
@@ -202,6 +418,7 @@ html.device-phone .window .window-resizer {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: transform 0.15s ease, background 0.15s ease;
   user-select: none;
   flex-shrink: 0;
@@ -288,6 +505,7 @@ html.device-phone .window .window-resizer {
   font-size: 13px;
   transition: transform 0.15s ease, background 0.15s ease;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-music-btn:active {
@@ -316,6 +534,7 @@ html.device-phone .window .window-resizer {
   display: flex;
   width: 100%;
   height: 100%;
+  transform: translateZ(0);
   will-change: transform;
   touch-action: pan-y;
 }
@@ -364,6 +583,8 @@ html.device-phone .window .window-resizer {
   padding: 0;
   cursor: pointer;
   transition: width 0.25s ease, background-color 0.25s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-page-dot.active {
@@ -386,6 +607,7 @@ html.device-phone .window .window-resizer {
   padding: 6px 2px;
   border-radius: var(--r);
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   outline: none;
 }
 
@@ -404,6 +626,11 @@ html.device-phone .window .window-resizer {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   position: relative;
   overflow: hidden;
+}
+
+.mobile-app-item-ios .mobile-app-icon-wrapper {
+  border-radius: 22%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .mobile-app-icon-img {
@@ -435,6 +662,39 @@ html.device-phone .window .window-resizer {
   margin-bottom: 8px;
 }
 
+.mobile-dock-ios {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  padding: 10px 18px;
+  margin: 0 12px 10px 12px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.mobile-dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  padding: 4px;
+  border-radius: var(--r);
+  transition: transform 0.15s ease;
+}
+
+.mobile-dock-item:active {
+  transform: scale(0.9);
+}
+
 .mobile-drawer-trigger-btn {
   display: flex;
   align-items: center;
@@ -449,6 +709,8 @@ html.device-phone .window .window-resizer {
   cursor: pointer;
   margin-bottom: 4px;
   min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-drawer-trigger-btn:active {
@@ -467,6 +729,7 @@ html.device-phone .window .window-resizer {
   align-items: center;
   background: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 28px;
   padding: 10px 14px;
@@ -483,6 +746,7 @@ html.device-phone .window .window-resizer {
   padding: 8px 18px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: var(--r-full);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: var(--text-primary);
@@ -490,6 +754,8 @@ html.device-phone .window .window-resizer {
   cursor: pointer;
   width: fit-content;
   min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-spotlight-btn:active {
@@ -514,6 +780,8 @@ html.device-phone .window .window-resizer {
   font-size: 14px;
   cursor: pointer;
   min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-search-pill:active {
@@ -540,6 +808,8 @@ html.device-phone .window .window-resizer {
   margin-bottom: 16px;
   box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-mode-kali .mobile-quick-terminal-card:active {
@@ -592,6 +862,8 @@ html.device-phone .window .window-resizer {
   font-family: var(--font-mono);
   font-size: 12px;
   min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-kali-tool-card:active {
@@ -606,7 +878,10 @@ html.device-phone .window .window-resizer {
   background: rgba(16, 18, 26, 0.85);
   backdrop-filter: blur(32px) saturate(1.8);
   -webkit-backdrop-filter: blur(32px) saturate(1.8);
-  transform: translateY(100%);
+  transform: translateY(100%) translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   padding-top: calc(44px + env(safe-area-inset-top, 0px));
   padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
@@ -620,7 +895,7 @@ html.device-phone .window .window-resizer {
 }
 
 #mobile-app-drawer.active {
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0);
 }
 
 .mobile-drawer-handle {
@@ -630,6 +905,8 @@ html.device-phone .window .window-resizer {
   background: var(--glass-border);
   margin: 0 auto 14px auto;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-drawer-search-bar {
@@ -666,6 +943,8 @@ html.device-phone .window .window-resizer {
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-drawer-grid {
@@ -684,6 +963,7 @@ html.device-phone .window .window-resizer {
   z-index: 3000;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -691,6 +971,8 @@ html.device-phone .window .window-resizer {
   padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px));
   opacity: 0;
   pointer-events: none;
+  transform: translateZ(0);
+  will-change: transform, opacity;
   transition: opacity 0.25s ease;
   user-select: none;
   box-sizing: border-box;
@@ -723,6 +1005,8 @@ html.device-phone .window .window-resizer {
   font-size: 13px;
   cursor: pointer;
   min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-switcher-clear-btn:active {
@@ -793,6 +1077,8 @@ html.device-phone .window .window-resizer {
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-switcher-card-preview {
@@ -821,13 +1107,17 @@ html.device-phone .window .window-resizer {
   z-index: 3500;
   background: rgba(10, 10, 15, 0.88);
   backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
   padding-top: calc(44px + env(safe-area-inset-top, 0px));
   padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   padding-left: 20px;
   padding-right: 20px;
   display: flex;
   flex-direction: column;
-  transform: translateY(-100%);
+  transform: translateY(-100%) translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   overflow-y: auto;
@@ -835,7 +1125,7 @@ html.device-phone .window .window-resizer {
 }
 
 #mobile-control-center.active {
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0);
 }
 
 .mobile-cc-header {
@@ -862,6 +1152,8 @@ html.device-phone .window .window-resizer {
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-cc-tiles-grid {
@@ -883,6 +1175,7 @@ html.device-phone .window .window-resizer {
   transition: background 0.15s ease, border-color 0.15s ease;
   min-height: 84px;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobile-cc-tile:active {
@@ -893,6 +1186,11 @@ html.device-phone .window .window-resizer {
   background: var(--brand);
   border-color: var(--brand-hover);
   color: var(--tx-on-brand);
+}
+
+.mobile-cc-tile-action {
+  background: rgba(var(--brand-rgb, 120, 80, 255), 0.25);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .mobile-cc-tile-icon {
@@ -943,6 +1241,7 @@ html.device-phone .window .window-resizer {
   accent-color: var(--brand);
   cursor: pointer;
   min-height: 44px;
+  touch-action: manipulation;
 }
 
 #mobile-flashlight-overlay {
@@ -952,4 +1251,106 @@ html.device-phone .window .window-resizer {
   z-index: 99999;
   pointer-events: auto;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-action-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 4000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-action-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-action-modal {
+  background: var(--bg-elev-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 500px;
+  padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px)) 16px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(100%) translateZ(0);
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.mobile-action-modal-overlay.active .mobile-action-modal {
+  transform: translateY(0) translateZ(0);
+}
+
+.mobile-action-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.mobile-action-modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-action-modal-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  background: var(--bg-elev-3);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+.mobile-action-modal-btn:active {
+  transform: scale(0.98);
+  background: var(--surface-hover);
+}
+
+.mobile-action-modal-btn.danger {
+  color: var(--error, #ff453a);
+}
+
+.mobile-action-modal-btn i {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.mobile-action-modal-cancel {
+  margin-top: 4px;
+  background: transparent;
+  border-color: transparent;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--text-secondary);
 }

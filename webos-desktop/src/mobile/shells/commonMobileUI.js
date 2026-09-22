@@ -32,26 +32,125 @@ export const createAppItem = (manifest, onClick, withTitle = true) => {
   return item;
 };
 
-export const createStatusBar = (onToggleControlCenter) => {
+export const openQuickModeSwitcher = (os) => {
+  if (os?.app?.launch) {
+    os.app.launch("modeSwitcherApp");
+    return;
+  }
+  const overlay = createElement("div", { className: "mobile-modal-overlay" });
+  const modal = createElement("div", { className: "mobile-session-modal" });
+  const header = createElement("div", { className: "mobile-modal-header" });
+  const title = createElement("span", { className: "mobile-modal-title", text: "Select OS Mode" });
+  const closeBtn = createElement("button", {
+    className: "mobile-modal-close",
+    html: '<i class="fas fa-times"></i>',
+    attributes: { "aria-label": "Close" }
+  });
+  header.appendChild(title);
+  header.appendChild(closeBtn);
+
+  const list = createElement("div", { className: "mobile-modal-actions" });
+  const modes = [
+    { id: "default", name: "sitalOS", icon: "fas fa-desktop" },
+    { id: "mac", name: "macOS", icon: "fab fa-apple" },
+    { id: "chromeos", name: "ChromeOS", icon: "fab fa-chrome" },
+    { id: "kali", name: "Kali Linux", icon: "fas fa-shield-alt" }
+  ];
+
+  modes.forEach((item) => {
+    const btn = createElement("button", {
+      className: "mobile-modal-btn",
+      html: `<i class="${item.icon}"></i><span>${item.name}</span>`
+    });
+    bindEvent(btn, "click", () => {
+      overlay.remove();
+      if (typeof os?.modes?.enter === "function") {
+        os.modes.enter(item.id);
+      }
+    });
+    list.appendChild(btn);
+  });
+
+  modal.appendChild(header);
+  modal.appendChild(list);
+  overlay.appendChild(modal);
+
+  bindEvent(closeBtn, "click", () => overlay.remove());
+  bindEvent(overlay, "click", (event) => {
+    if (event.target === overlay) overlay.remove();
+  });
+
+  document.body.appendChild(overlay);
+};
+
+export const createStatusBar = (options = {}) => {
+  const resolvedOptions = typeof options === "function"
+    ? { onToggleControlCenter: options }
+    : (options || {});
+  const isMac = Boolean(resolvedOptions.isMac ?? (
+    typeof document !== "undefined" && (
+      document.documentElement.classList.contains("mac-mode") ||
+      document.querySelector(".mobile-mode-mac") !== null
+    )
+  ));
+  const onToggleControlCenter = resolvedOptions.onToggleControlCenter;
+
   const bar = createElement("div", { id: "mobile-status-bar" });
   const left = createElement("div", { className: "mobile-status-left" });
-  const timeEl = createElement("span", { className: "mobile-status-time", text: "12:00" });
+  const timeEl = createElement("span", {
+    className: isMac ? "mobile-status-time mobile-status-time-mac" : "mobile-status-time",
+    text: isMac ? "9:41" : "12:00"
+  });
   left.appendChild(timeEl);
 
+  const center = createElement("div", { className: "mobile-status-center" });
+  if (isMac) {
+    const dynamicIsland = createElement("div", {
+      id: "mobile-dynamic-island",
+      className: "mobile-dynamic-island"
+    });
+    bindEvent(dynamicIsland, "click", (event) => {
+      event.stopPropagation();
+      if (typeof onToggleControlCenter === "function") {
+        onToggleControlCenter();
+      }
+    });
+    center.appendChild(dynamicIsland);
+  } else {
+    const cameraPunch = createElement("div", {
+      id: "mobile-camera-punch",
+      className: "mobile-camera-punch"
+    });
+    center.appendChild(cameraPunch);
+  }
+
   const right = createElement("div", { className: "mobile-status-right" });
+  if (isMac) {
+    const signalIcon = createElement("i", { className: "fas fa-signal mobile-status-signal" });
+    right.appendChild(signalIcon);
+  }
+
   const wifiIcon = createElement("i", { className: "fas fa-wifi mobile-status-wifi" });
-  const batteryBox = createElement("div", { className: "mobile-status-battery" });
+  right.appendChild(wifiIcon);
+
+  const batteryBox = createElement("div", {
+    className: isMac ? "mobile-status-battery mobile-status-battery-pill" : "mobile-status-battery"
+  });
   const batteryLevel = createElement("span", { className: "mobile-battery-level", text: "100%" });
   const batteryIcon = createElement("i", { className: "fas fa-battery-full mobile-battery-icon" });
   batteryBox.appendChild(batteryLevel);
   batteryBox.appendChild(batteryIcon);
-  right.appendChild(wifiIcon);
   right.appendChild(batteryBox);
 
   bar.appendChild(left);
+  bar.appendChild(center);
   bar.appendChild(right);
 
-  bindEvent(right, "click", onToggleControlCenter);
+  bindEvent(right, "click", () => {
+    if (typeof onToggleControlCenter === "function") {
+      onToggleControlCenter();
+    }
+  });
 
   const updateClock = () => {
     const now = new Date();
@@ -59,10 +158,9 @@ export const createStatusBar = (onToggleControlCenter) => {
     const minutes = String(now.getMinutes()).padStart(2, "0");
     setText(timeEl, `${hours}:${minutes}`);
   };
-  updateClock();
   const clockInterval = setInterval(updateClock, 1000);
 
-  if (navigator.getBattery) {
+  if (typeof navigator !== "undefined" && navigator.getBattery) {
     navigator.getBattery().then((battery) => {
       const renderBattery = () => {
         const percent = Math.round(battery.level * 100);

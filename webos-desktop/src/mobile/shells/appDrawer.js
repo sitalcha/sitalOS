@@ -2,7 +2,32 @@ import { createElement, setHTML, bindEvent, toggleClass } from "../../shared/dom
 import { APP_MANIFESTS } from "../../registry/AppManifest.js";
 import { createAppItem } from "./commonMobileUI.js";
 
-export const createAppDrawer = (os) => {
+const SYSTEM_DRAWER_ITEMS = [
+  {
+    serviceKey: "modeSwitcherApp",
+    title: "Switch OS Mode",
+    description: "Switch desktop and mobile operating system modes",
+    icon: "papirus:apps/utilities-tweak-tool",
+    action: (os) => {
+      if (os?.app?.launch) {
+        os.app.launch("modeSwitcherApp");
+      }
+    }
+  },
+  {
+    serviceKey: "lockScreen",
+    title: "Lock Screen",
+    description: "Lock device session and display lock screen",
+    icon: "papirus:actions/object-locked",
+    action: (os) => {
+      if (os?.app?.lockSession) {
+        os.app.lockSession();
+      }
+    }
+  }
+];
+
+export const createAppDrawer = (os, extraItems = []) => {
   const drawer = createElement("div", { id: "mobile-app-drawer" });
   const handle = createElement("div", { className: "mobile-drawer-handle" });
   const searchBar = createElement("div", { className: "mobile-drawer-search-bar" });
@@ -26,19 +51,34 @@ export const createAppDrawer = (os) => {
   drawer.appendChild(searchBar);
   drawer.appendChild(grid);
 
+  const allApps = [
+    ...SYSTEM_DRAWER_ITEMS,
+    ...(Array.isArray(extraItems) ? extraItems : []),
+    ...APP_MANIFESTS
+  ];
+
   const filterApps = (query) => {
     setHTML(grid, "");
     const cleanQuery = query.toLowerCase().trim();
-    const matches = APP_MANIFESTS.filter((app) => {
+    const seenKeys = new Set();
+    const matches = allApps.filter((app) => {
+      if (!app || !app.title) return false;
+      const dedupeKey = app.serviceKey || app.title;
+      if (seenKeys.has(dedupeKey)) return false;
+      seenKeys.add(dedupeKey);
       if (!cleanQuery) return true;
-      const matchTitle = app.title && app.title.toLowerCase().includes(cleanQuery);
+      const matchTitle = app.title.toLowerCase().includes(cleanQuery);
       const matchDesc = app.description && app.description.toLowerCase().includes(cleanQuery);
       return matchTitle || matchDesc;
     });
 
     matches.forEach((app) => {
       const item = createAppItem(app, () => {
-        os?.app?.launch?.(app.serviceKey);
+        if (typeof app.action === "function") {
+          app.action(os);
+        } else {
+          os?.app?.launch?.(app.serviceKey);
+        }
         close();
       });
       grid.appendChild(item);

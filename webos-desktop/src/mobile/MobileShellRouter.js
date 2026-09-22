@@ -7,10 +7,6 @@ import { createKaliMobile } from "./shells/kaliMobile.js";
 import { adaptWindow } from "./shells/commonMobileUI.js";
 
 export const getActiveSessionMode = (os) => {
-  if (os && os.modes && typeof os.modes.getActive === "function") {
-    const mode = os.modes.getActive();
-    if (mode) return mode;
-  }
   if (os && os.modes && typeof os.modes.getActiveModes === "function") {
     const modes = os.modes.getActiveModes();
     if (modes && modes.length > 0) return modes[0];
@@ -53,10 +49,6 @@ export const initMobileShellRouter = (os) => {
   if (activeRouterInstance) {
     activeRouterInstance.destroy();
     activeRouterInstance = null;
-  }
-
-  if (os && os.modes && typeof os.modes.getActive !== "function") {
-    os.modes.getActive = () => getActiveSessionMode(os);
   }
 
   let currentShell = null;

@@ -5,7 +5,8 @@ import {
   createDock,
   createMusicWidget,
   createAppItem,
-  adaptWindow
+  adaptWindow,
+  openQuickModeSwitcher
 } from "./commonMobileUI.js";
 import { createAppDrawer } from "./appDrawer.js";
 import { createAppSwitcher } from "./appSwitcher.js";
@@ -28,20 +29,75 @@ export const createSitalOSMobile = (os) => {
     });
 
     const topWidget = createElement("div", { className: "mobile-home-top-widget" });
-    const clockEl = createElement("div", { className: "mobile-home-clock", text: "12:00" });
-    const dateEl = createElement("div", {
-      className: "mobile-home-date",
+    const glance = createElement("div", {
+      className: "pixel-at-a-glance",
+      attributes: { "role": "button", "aria-label": "At-a-Glance" }
+    });
+    const glanceDate = createElement("div", {
+      className: "pixel-glance-date",
       text: new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" }).format(new Date())
     });
-    topWidget.appendChild(clockEl);
-    topWidget.appendChild(dateEl);
+    const glanceSub = createElement("div", {
+      className: "pixel-glance-sub",
+      html: '<span>24°C</span> <span>⛅</span>'
+    });
+    glance.appendChild(glanceDate);
+    glance.appendChild(glanceSub);
+
+    bindEvent(glance, "click", (event) => {
+      if (event.target.closest(".pixel-glance-sub")) {
+        if (os?.app?.launch) {
+          os.app.launch("weatherApp").catch(() => {
+            os.app.launch("browserApp").catch(() => {});
+          });
+        }
+      } else {
+        if (os?.app?.launch) {
+          os.app.launch("calendarApp").catch(() => {
+            os.app.launch("weatherApp").catch(() => {});
+          });
+        }
+      }
+    });
+
+    const quickActions = createElement("div", { className: "mobile-quick-actions" });
+    const switchBtn = createElement("button", {
+      className: "mobile-quick-btn mobile-quick-switch-btn",
+      html: '<i class="fas fa-layer-group"></i><span>Switch OS</span>',
+      attributes: { "aria-label": "Switch OS Mode" }
+    });
+    bindEvent(switchBtn, "click", () => {
+      if (os?.app?.launch) {
+        const promise = os.app.launch("modeSwitcherApp");
+        if (promise && typeof promise.catch === "function") {
+          promise.catch(() => openQuickModeSwitcher(os));
+        }
+      } else {
+        openQuickModeSwitcher(os);
+      }
+    });
+
+    const powerBtn = createElement("button", {
+      className: "mobile-quick-btn mobile-quick-power-btn",
+      html: '<i class="fas fa-power-off"></i>',
+      attributes: { "aria-label": "Lock Screen" }
+    });
+    bindEvent(powerBtn, "click", () => {
+      if (os?.app?.lockSession) {
+        os.app.lockSession();
+      }
+    });
+
+    quickActions.appendChild(switchBtn);
+    quickActions.appendChild(powerBtn);
+
+    topWidget.appendChild(glance);
+    topWidget.appendChild(quickActions);
     screen.appendChild(topWidget);
 
     const updateHomeClock = () => {
       const now = new Date();
-      const hours = String(now.getHours()).padStart(2, "0");
-      const minutes = String(now.getMinutes()).padStart(2, "0");
-      setText(clockEl, `${hours}:${minutes}`);
+      setText(glanceDate, new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" }).format(now));
     };
     updateHomeClock();
     homeClockInterval = setInterval(updateHomeClock, 1000);
@@ -71,6 +127,7 @@ export const createSitalOSMobile = (os) => {
       const gridElement = createElement("div", { className: "mobile-apps-grid" });
       pageApps.forEach((app) => {
         const item = createAppItem(app, () => os?.app?.launch?.(app.serviceKey), true);
+        item.classList.add("mobile-app-item-pixel");
         gridElement.appendChild(item);
       });
       pageElement.appendChild(gridElement);
@@ -157,8 +214,69 @@ export const createSitalOSMobile = (os) => {
     });
 
     const bottomArea = createElement("div", { className: "mobile-home-bottom" });
-    const dock = createDock(os, ["terminalApp", "browserApp", "contactApp", "settingsApp"]);
+
+    const searchPill = createElement("div", {
+      className: "pixel-search-pill",
+      attributes: { "role": "button", "aria-label": "Search apps and web" }
+    });
+    const gLogo = createElement("span", {
+      className: "pixel-search-g",
+      html: '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>'
+    });
+    const searchText = createElement("span", {
+      className: "pixel-search-text",
+      text: "Search apps & web..."
+    });
+    const searchIcons = createElement("div", { className: "pixel-search-pill-icons" });
+    const micIcon = createElement("i", {
+      className: "fas fa-microphone pixel-search-mic",
+      attributes: { "aria-label": "Voice Search" }
+    });
+    const lensIcon = createElement("i", {
+      className: "fas fa-camera pixel-search-lens",
+      attributes: { "aria-label": "Google Lens Search" }
+    });
+    searchIcons.appendChild(micIcon);
+    searchIcons.appendChild(lensIcon);
+    searchPill.appendChild(gLogo);
+    searchPill.appendChild(searchText);
+    searchPill.appendChild(searchIcons);
+
+    bindEvent(searchPill, "click", (event) => {
+      if (event.target.closest(".pixel-search-mic") || event.target.closest(".pixel-search-lens")) {
+        if (os?.app?.launch) {
+          os.app.launch("browserApp").catch(() => onOpenDrawer());
+        } else {
+          onOpenDrawer();
+        }
+      } else {
+        onOpenDrawer();
+      }
+    });
+    bottomArea.appendChild(searchPill);
+
+    const dock = createDock(os, ["browserApp", "notepadApp", "contactApp", "settingsApp", "terminalApp"]);
+    dock.classList.add("mobile-dock-pixel");
     bottomArea.appendChild(dock);
+
+    const gestureBar = createElement("div", { className: "mobile-gesture-bar" });
+    bindEvent(gestureBar, "click", () => goHome());
+    let barTouchStartY = 0;
+    bindEvent(gestureBar, "touchstart", (event) => {
+      if (event.touches.length === 1) {
+        barTouchStartY = event.touches[0].clientY;
+      }
+    }, { passive: true });
+    bindEvent(gestureBar, "touchend", (event) => {
+      if (event.changedTouches.length === 1) {
+        const barTouchEndY = event.changedTouches[0].clientY;
+        if (barTouchStartY - barTouchEndY > 30) {
+          openAppSwitcher();
+        }
+      }
+    });
+    bottomArea.appendChild(gestureBar);
+
     screen.appendChild(bottomArea);
 
     let homeTouchStartY = 0;
@@ -219,11 +337,15 @@ export const createSitalOSMobile = (os) => {
 
     controlCenter = createControlCenter((enabled) => {
       if (statusBar) statusBar.setWifiEnabled(enabled);
-    });
+    }, os);
     appDrawer = createAppDrawer(os);
     appSwitcher = createAppSwitcher(os);
     homeScreenEl = createHome(() => appDrawer.open());
-    statusBar = createStatusBar(() => controlCenter.toggle());
+    statusBar = createStatusBar({
+      isMac: false,
+      onToggleControlCenter: () => controlCenter.toggle(),
+      os
+    });
 
     document.body.appendChild(statusBar.element);
     document.body.appendChild(homeScreenEl);
@@ -278,6 +400,7 @@ export const createSitalOSMobile = (os) => {
 
     $$(".mobile-nav-header").forEach((el) => el.remove());
     $$(".mobile-home-indicator").forEach((el) => el.remove());
+    $$(".mobile-gesture-bar").forEach((el) => el.remove());
   };
 
   const goHome = () => {

@@ -5,7 +5,8 @@ import {
   createDock,
   createMusicWidget,
   createAppItem,
-  adaptWindow
+  adaptWindow,
+  openQuickModeSwitcher
 } from "./commonMobileUI.js";
 import { createAppDrawer } from "./appDrawer.js";
 import { createAppSwitcher } from "./appSwitcher.js";
@@ -35,6 +36,38 @@ export const createMacOSMobile = (os) => {
     });
     topWidget.appendChild(clockEl);
     topWidget.appendChild(dateEl);
+
+    const quickActions = createElement("div", { className: "mobile-quick-actions" });
+    const switchBtn = createElement("button", {
+      className: "mobile-quick-btn mobile-quick-switch-btn",
+      html: '<i class="fas fa-layer-group"></i><span>Switch OS</span>',
+      attributes: { "aria-label": "Switch OS Mode" }
+    });
+    bindEvent(switchBtn, "click", () => {
+      if (os?.app?.launch) {
+        const promise = os.app.launch("modeSwitcherApp");
+        if (promise && typeof promise.catch === "function") {
+          promise.catch(() => openQuickModeSwitcher(os));
+        }
+      } else {
+        openQuickModeSwitcher(os);
+      }
+    });
+
+    const powerBtn = createElement("button", {
+      className: "mobile-quick-btn mobile-quick-power-btn",
+      html: '<i class="fas fa-power-off"></i>',
+      attributes: { "aria-label": "Lock Screen" }
+    });
+    bindEvent(powerBtn, "click", () => {
+      if (os?.app?.lockSession) {
+        os.app.lockSession();
+      }
+    });
+
+    quickActions.appendChild(switchBtn);
+    quickActions.appendChild(powerBtn);
+    topWidget.appendChild(quickActions);
     screen.appendChild(topWidget);
 
     const updateHomeClock = () => {
@@ -79,6 +112,7 @@ export const createMacOSMobile = (os) => {
       const gridElement = createElement("div", { className: "mobile-apps-grid" });
       pageApps.forEach((app) => {
         const item = createAppItem(app, () => os?.app?.launch?.(app.serviceKey), true);
+        item.classList.add("mobile-app-item-ios");
         gridElement.appendChild(item);
       });
       pageElement.appendChild(gridElement);
@@ -166,8 +200,27 @@ export const createMacOSMobile = (os) => {
 
     const bottomArea = createElement("div", { className: "mobile-home-bottom" });
     const dock = createDock(os, ["browserApp", "contactApp", "notepadApp", "settingsApp"]);
+    dock.classList.add("mobile-dock-ios");
     bottomArea.appendChild(dock);
     screen.appendChild(bottomArea);
+
+    const homeIndicator = createElement("div", { className: "mobile-home-indicator-ios" });
+    bindEvent(homeIndicator, "click", () => goHome());
+    let indTouchStartY = 0;
+    bindEvent(homeIndicator, "touchstart", (event) => {
+      if (event.touches.length === 1) {
+        indTouchStartY = event.touches[0].clientY;
+      }
+    }, { passive: true });
+    bindEvent(homeIndicator, "touchend", (event) => {
+      if (event.changedTouches.length === 1) {
+        const indTouchEndY = event.changedTouches[0].clientY;
+        if (indTouchStartY - indTouchEndY > 30) {
+          openAppSwitcher();
+        }
+      }
+    });
+    screen.appendChild(homeIndicator);
 
     let homeTouchStartY = 0;
     let homeTouchStartX = 0;
@@ -227,11 +280,15 @@ export const createMacOSMobile = (os) => {
 
     controlCenter = createControlCenter((enabled) => {
       if (statusBar) statusBar.setWifiEnabled(enabled);
-    });
+    }, os);
     appDrawer = createAppDrawer(os);
     appSwitcher = createAppSwitcher(os);
     homeScreenEl = createHome(() => appDrawer.open());
-    statusBar = createStatusBar(() => controlCenter.toggle());
+    statusBar = createStatusBar({
+      isMac: true,
+      onToggleControlCenter: () => controlCenter.toggle(),
+      os
+    });
 
     document.body.appendChild(statusBar.element);
     document.body.appendChild(homeScreenEl);
@@ -286,6 +343,7 @@ export const createMacOSMobile = (os) => {
 
     $$(".mobile-nav-header").forEach((el) => el.remove());
     $$(".mobile-home-indicator").forEach((el) => el.remove());
+    $$(".mobile-home-indicator-ios").forEach((el) => el.remove());
   };
 
   const goHome = () => {
