@@ -1,26 +1,6 @@
 import "../styles/kagajAi.css";
-import { BaseApp, os, StorageKeys, ServiceKeys, APP_MANIFESTS, $, $$, bindEvent, toggleClass, setText, setHTML, createElement } from "../framework.js";
+import { BaseApp, os, StorageKeys, ServiceKeys, $, $$, bindEvent, toggleClass, setText, setHTML, createElement } from "../framework.js";
 import { getLibraryUrl } from "../shared/cdnConfig.js";
-
-if (typeof os?.window?.create === "function") {
-  const originalCreateWindow = os.window.create.bind(os.window);
-  os.window.create = function(targetIdOrOptions, ...remainingArgs) {
-    if (typeof targetIdOrOptions === "object" && targetIdOrOptions !== null && !(targetIdOrOptions instanceof HTMLElement)) {
-      const targetId = targetIdOrOptions.id;
-      const targetTitle = targetIdOrOptions.title;
-      const targetWidth = typeof targetIdOrOptions.width === "number" ? `${targetIdOrOptions.width}px` : (targetIdOrOptions.width || "80vw");
-      const targetHeight = typeof targetIdOrOptions.height === "number" ? `${targetIdOrOptions.height}px` : (targetIdOrOptions.height || "80vh");
-      return originalCreateWindow(targetId, targetTitle, targetWidth, targetHeight, {
-        ...targetIdOrOptions,
-        id: targetId,
-        title: targetTitle,
-        width: targetWidth,
-        height: targetHeight
-      });
-    }
-    return originalCreateWindow(targetIdOrOptions, ...remainingArgs);
-  };
-}
 
 function formatFileSize(bytes) {
   if (bytes < 1024) return `${bytes} B`;
@@ -64,14 +44,19 @@ export class KagajAiApp extends BaseApp {
   }
 
   open() {
-    const win = os.window.create({
-      id: "kagaj-ai-" + Date.now(),
-      title: "Kagaj-AI",
-      icon: "papirus:apps/brainstorm",
-      width: Math.min(1080, window.innerWidth - 40),
-      height: Math.min(760, window.innerHeight - 50),
-      appId: ServiceKeys.KAGAJ_AI || "kagajAiApp"
-    });
+    const winId = "kagaj-ai-" + Date.now();
+    const winWidth = Math.min(1120, window.innerWidth - 30) + "px";
+    const winHeight = Math.min(800, window.innerHeight - 40) + "px";
+    const win = os.window.create(
+      winId,
+      "Kagaj-AI",
+      winWidth,
+      winHeight,
+      {
+        icon: "papirus:apps/brainstorm",
+        appId: ServiceKeys.KAGAJ_AI || "kagajAiApp"
+      }
+    );
 
     this.openWindows.add(win);
     bindEvent(win, "remove", () => {
@@ -99,123 +84,143 @@ export class KagajAiApp extends BaseApp {
     setHTML(
       contentRoot,
       `
-      <header class="kagaj-header">
-        <h1 class="kagaj-title">📋 Kagaj-AI</h1>
-        <p class="kagaj-subtitle">Upload a PDF or Photo. AI will read everything for you.</p>
-        <div class="kagaj-model-badge" title="Click to change Gemini model">
+      <header class="header">
+        <h1>📋 Kagaj-AI</h1>
+        <p class="subtitle">Upload a PDF or Photo. AI will read everything for you.</p>
+        <div class="model-badge" id="modelBadge" title="Click to configure Gemini model or API key">
           <span class="dot"></span>
-          <span class="kagaj-model-label">● Model: ${initialModel} ▾</span>
+          <span class="model-badge-text">Model: ${initialModel} ⚙️</span>
         </div>
-        <button class="kagaj-key-btn" type="button" title="View or change Gemini API Key">🔑 API Key</button>
       </header>
 
-      <div class="kagaj-main-container">
+      <div class="main-container">
         <div class="left-column">
-          <div class="kagaj-card kagaj-config-card">
-            <div class="kagaj-card-title"><span class="icon">⚙️</span> AI Configuration</div>
-            <div class="kagaj-config-grid">
-              <div class="kagaj-config-group">
-                <label class="kagaj-config-label">🤖 Model Name</label>
-                <div class="kagaj-input-wrap">
-                  <input type="text" class="kagaj-config-input kagaj-model-input" value="${initialModel}" placeholder="e.g. gemini-2.0-flash" list="kagaj-model-options" />
-                  <datalist id="kagaj-model-options">
-                    <option value="gemini-2.0-flash">
-                    <option value="gemini-1.5-flash">
-                    <option value="gemini-2.5-flash">
-                    <option value="gemini-1.5-pro">
-                  </datalist>
-                </div>
-              </div>
-              <div class="kagaj-config-group">
-                <label class="kagaj-config-label">🔑 Gemini API Key</label>
-                <div class="kagaj-input-wrap">
-                  <input type="password" class="kagaj-config-input kagaj-api-key-input" value="${initialApiKey}" placeholder="Enter Gemini API key" />
-                  <button class="kagaj-key-toggle-btn" type="button" title="Toggle visibility">👁️</button>
-                </div>
-              </div>
-            </div>
-            <button class="kagaj-save-config-btn" type="button">💾 Save Settings</button>
-          </div>
+          <div class="card" id="uploadCard" style="margin-bottom: 1.5rem;">
+            <div class="card-title"><span class="icon">📤</span> Upload Document</div>
 
-          <div class="kagaj-card upload-card">
-            <div class="kagaj-card-title"><span class="icon">📤</span> Upload Document</div>
-            <div class="kagaj-upload-zone">
-              <div class="kagaj-upload-icon">📄</div>
-              <div class="kagaj-upload-text">Drag and Drop your file here</div>
-              <div class="kagaj-upload-hint">or click to browse. PDF, JPG, PNG supported</div>
-              <input type="file" class="kagaj-file-input" accept=".pdf,.jpg,.jpeg,.png,.bmp,.tiff,.webp" />
+            <div class="upload-zone" id="dropZone">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">Drag & Drop your file here</div>
+              <div class="upload-hint">or click to browse. PDF, JPG, PNG supported</div>
+              <input type="file" class="file-input" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.bmp,.tiff,.webp" />
             </div>
-            <div class="kagaj-file-info">
+
+            <div class="file-info" id="fileInfo">
               <span class="file-icon">📎</span>
-              <span class="file-name"></span>
-              <span class="file-size"></span>
-              <button class="remove-btn" type="button" title="Remove file">✕</button>
+              <span class="file-name" id="fileName"></span>
+              <span class="file-size" id="fileSize"></span>
+              <button class="remove-btn" id="removeBtn" type="button" title="Remove file">✕</button>
             </div>
-            <div class="kagaj-prompt-section">
-              <label class="kagaj-prompt-label">✏️ Custom Prompt (optional)</label>
-              <textarea class="kagaj-prompt-textarea" placeholder="Leave empty for auto-extract, or type a custom instruction like:&#10;&#10;• Extract the name and ward number&#10;• Read the handwritten text&#10;• Extract all tables exactly as they appear"></textarea>
+
+            <div class="prompt-section">
+              <div class="prompt-label">✏️ Custom Prompt (optional)</div>
+              <textarea class="prompt-textarea" id="promptInput" placeholder="Leave empty for auto-extract, or type a custom instruction like:&#10;&#10;• Extract the name and ward number&#10;• Read the handwritten text&#10;• Extract all tables exactly as they appear"></textarea>
             </div>
-            <button class="kagaj-extract-btn" type="button" disabled>
-              <span class="kagaj-spinner"></span>
+
+            <button class="extract-btn" id="extractBtn" type="button" disabled>
+              <span class="spinner"></span>
               <span class="btn-text">🚀 Extract with AI</span>
             </button>
-            <div class="kagaj-error-box"></div>
+
+            <div class="error-box" id="errorBox"></div>
           </div>
 
-          <div class="kagaj-card preview-card">
-            <div class="kagaj-card-title"><span class="icon">🔍</span> Document Preview</div>
-            <div class="kagaj-preview-placeholder">
+          <div class="card">
+            <div class="card-title"><span class="icon">🔍</span> Document Preview</div>
+            <div id="previewPlaceholder" style="text-align:center; padding: 3rem 1rem; color: var(--kagaj-text-muted); font-size: 0.85rem;">
               <div style="font-size: 3rem; margin-bottom: 0.5rem; opacity: 0.3;">🖼️</div>
               Upload a file to see preview here
             </div>
-            <div class="kagaj-preview-section">
-              <img class="kagaj-preview-img" alt="Document Preview" />
+            <div class="preview-section" id="previewSection">
+              <img class="preview-img" id="previewImg" alt="Document Preview" />
             </div>
           </div>
         </div>
 
         <div class="right-column">
-          <div class="kagaj-card kagaj-results-card">
-            <div class="kagaj-card-title"><span class="icon">✅</span> Extracted Data. Click any value to copy</div>
-            <div class="kagaj-result-fields"></div>
-            <div class="kagaj-raw-text-box">
-              <div class="kagaj-raw-label">📝 Formatted Output (Word Copy Ready)</div>
-              <div class="kagaj-btn-bar">
-                <button class="kagaj-download-btn" type="button">⬇️ Download as Word</button>
-                <button class="kagaj-save-txt-btn" type="button">💾 Save Text (.txt)</button>
-                <button class="kagaj-save-os-btn" type="button">📁 Save to sitalOS</button>
-                <button class="kagaj-copy-all-btn" type="button">Copy for Word</button>
+          <div class="card results-card" id="resultsCard" style="height: 100%;">
+            <div class="card-title"><span class="icon">✅</span> Extracted Data. Click any value to copy</div>
+
+            <div class="result-fields" id="resultFields"></div>
+
+            <div class="raw-text-box" id="rawTextBox">
+              <div class="raw-label">📝 Formatted Output (Word Copy Ready)</div>
+              <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
+                <button class="copy-all-btn" id="downloadWordBtn" type="button" style="background-color: #007bff; color: white;">⬇️ Download as Word</button>
+                <button class="copy-all-btn" id="copyAllBtn" type="button">Copy for Word</button>
               </div>
-              <div class="kagaj-formatted-output markdown-body"></div>
+              <div id="formattedOutput" class="markdown-body" style="background: white; color: black; padding: 20px; border-radius: 8px; margin-top: 10px; max-height: 400px; overflow-y: auto;"></div>
+              <pre id="rawText" style="display:none;"></pre>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="kagaj-toast">✓ Copied to clipboard!</div>
-      <footer class="kagaj-footer">
-        Kagaj-AI • Powered by Google Gemini AI • Made with love in Nepal
+      <div class="toast" id="toast">✓ Copied to clipboard!</div>
+
+      <footer class="footer">
+        Kagaj-AI • Powered by Google Gemini AI • Made with ❤️ in Nepal 🇳🇵
       </footer>
+
+      <div class="kagaj-settings-modal" id="settingsModal" style="display: none;">
+        <div class="kagaj-settings-backdrop" id="settingsBackdrop"></div>
+        <div class="kagaj-settings-card">
+          <div class="kagaj-settings-header">
+            <span>⚙️ Kagaj-AI Configuration</span>
+            <button class="kagaj-settings-close-btn" id="settingsCloseBtn" type="button">✕</button>
+          </div>
+          <div style="margin-top: 16px;">
+            <label class="kagaj-config-label">🤖 Gemini Model</label>
+            <input type="text" class="kagaj-config-input" id="modelInput" value="${initialModel}" list="kagaj-model-list" placeholder="e.g. gemini-2.0-flash" />
+            <datalist id="kagaj-model-list">
+              <option value="gemini-2.0-flash">
+              <option value="gemini-1.5-flash">
+              <option value="gemini-2.5-flash">
+              <option value="gemini-1.5-pro">
+            </datalist>
+          </div>
+          <div style="margin-top: 14px;">
+            <label class="kagaj-config-label">🔑 Gemini API Key</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="password" class="kagaj-config-input" id="apiKeyInput" value="${initialApiKey}" placeholder="Enter Gemini API key" />
+              <button type="button" id="keyToggleBtn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; padding: 0 12px; cursor: pointer;">👁️</button>
+            </div>
+          </div>
+          <button type="button" id="saveSettingsBtn" style="margin-top: 20px; width: 100%; padding: 10px; background: #6366f1; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">💾 Save Settings</button>
+        </div>
+      </div>
     `
     );
   }
 
   setupEvents(win) {
-    const dropZone = $(".kagaj-upload-zone", win);
-    const fileInput = $(".kagaj-file-input", win);
-    const fileInfo = $(".kagaj-file-info", win);
-    const removeBtn = $(".remove-btn", win);
-    const extractBtn = $(".kagaj-extract-btn", win);
-    const previewPlaceholder = $(".kagaj-preview-placeholder", win);
-    const previewSection = $(".kagaj-preview-section", win);
-    const resultsCard = $(".kagaj-results-card", win);
-    const formattedOutput = $(".kagaj-formatted-output", win);
-    const downloadBtn = $(".kagaj-download-btn", win);
-    const saveTxtBtn = $(".kagaj-save-txt-btn", win);
-    const saveOsBtn = $(".kagaj-save-os-btn", win);
-    const copyAllBtn = $(".kagaj-copy-all-btn", win);
-    const apiKeyBtn = $(".kagaj-key-btn", win);
-    const errorBox = $(".kagaj-error-box", win);
+    const dropZone = $("#dropZone", win);
+    const fileInput = $("#fileInput", win);
+    const fileInfo = $("#fileInfo", win);
+    const fileName = $("#fileName", win);
+    const fileSize = $("#fileSize", win);
+    const removeBtn = $("#removeBtn", win);
+    const extractBtn = $("#extractBtn", win);
+    const promptInput = $("#promptInput", win);
+    const errorBox = $("#errorBox", win);
+    const previewPlaceholder = $("#previewPlaceholder", win);
+    const previewSection = $("#previewSection", win);
+    const previewImg = $("#previewImg", win);
+    const resultsCard = $("#resultsCard", win);
+    const resultFields = $("#resultFields", win);
+    const rawText = $("#rawText", win);
+    const formattedOutput = $("#formattedOutput", win);
+    const downloadWordBtn = $("#downloadWordBtn", win);
+    const copyAllBtn = $("#copyAllBtn", win);
+    const modelBadge = $("#modelBadge", win);
+    const modelBadgeText = $(".model-badge-text", win);
+    const settingsModal = $("#settingsModal", win);
+    const settingsBackdrop = $("#settingsBackdrop", win);
+    const settingsCloseBtn = $("#settingsCloseBtn", win);
+    const modelInput = $("#modelInput", win);
+    const apiKeyInput = $("#apiKeyInput", win);
+    const keyToggleBtn = $("#keyToggleBtn", win);
+    const saveSettingsBtn = $("#saveSettingsBtn", win);
 
     const state = {
       selectedFile: null,
@@ -270,114 +275,59 @@ export class KagajAiApp extends BaseApp {
       this.extractWithAi(win, state);
     });
 
-    bindEvent(downloadBtn, "click", () => {
+    bindEvent(downloadWordBtn, "click", () => {
       this.downloadWord(formattedOutput, state.lastFileName);
-    });
-
-    bindEvent(saveTxtBtn, "click", () => {
-      this.downloadText(state.lastExtractedText, state.lastFileName, win);
-    });
-
-    bindEvent(saveOsBtn, "click", async () => {
-      await this.saveToSitalOs(state.lastFileName, state.lastExtractedText, win);
     });
 
     bindEvent(copyAllBtn, "click", () => {
       this.copyFormattedText(formattedOutput, copyAllBtn, win);
     });
 
-    const modelInput = $(".kagaj-model-input", win);
-    const apiKeyInput = $(".kagaj-api-key-input", win);
-    const keyToggleBtn = $(".kagaj-key-toggle-btn", win);
-    const saveConfigBtn = $(".kagaj-save-config-btn", win);
-    const modelBadge = $(".kagaj-model-badge", win);
-    const modelLabel = $(".kagaj-model-label", win);
-
-    if (keyToggleBtn && apiKeyInput) {
-      bindEvent(keyToggleBtn, "click", () => {
-        const isPassword = apiKeyInput.getAttribute("type") === "password";
-        apiKeyInput.setAttribute("type", isPassword ? "text" : "password");
-      });
-    }
-
-    if (saveConfigBtn) {
-      bindEvent(saveConfigBtn, "click", () => {
-        const chosenModel = modelInput?.value?.trim() || "gemini-2.0-flash";
-        const enteredKey = apiKeyInput?.value?.trim() || "";
-        os.storage.set(StorageKeys.kagajModel, chosenModel);
-        if (enteredKey) {
-          os.storage.set(StorageKeys.kagajApiKey, enteredKey);
-        }
-        if (modelLabel) {
-          setText(modelLabel, `● Model: ${chosenModel} ▾`);
-        }
-        setText(saveConfigBtn, "✓ Settings Saved!");
-        toggleClass(saveConfigBtn, "saved", true);
-        this.showToast(win, "✓ Settings saved!");
-        setTimeout(() => {
-          setText(saveConfigBtn, "💾 Save Settings");
-          toggleClass(saveConfigBtn, "saved", false);
-        }, 2000);
-      });
-    }
-
-    bindEvent(apiKeyBtn, "click", async () => {
-      const currentKey = apiKeyInput?.value?.trim() || os.storage.get(StorageKeys.kagajApiKey) || "";
-      const newKey = await os.dialog.prompt(
-        "Gemini API Key",
-        "Please enter your Google Gemini API Key:",
-        currentKey
-      );
-      if (newKey !== null && newKey !== undefined) {
-        const trimmed = newKey.trim();
-        if (trimmed) {
-          os.storage.set(StorageKeys.kagajApiKey, trimmed);
-          if (apiKeyInput) {
-            apiKeyInput.value = trimmed;
-          }
-          this.showToast(win, "API Key saved!");
-        }
-      }
+    bindEvent(modelBadge, "click", () => {
+      settingsModal.style.display = "flex";
     });
 
-    if (modelBadge) {
-      bindEvent(modelBadge, "click", async () => {
-        const activeModel = modelInput?.value?.trim() || os.storage.get(StorageKeys.kagajModel) || "gemini-2.0-flash";
-        const chosen = await os.dialog.prompt(
-          "Select Gemini Model",
-          "Enter Gemini model name (e.g. gemini-2.0-flash, gemini-1.5-flash, gemini-2.5-flash, gemini-1.5-pro):",
-          activeModel
-        );
-        if (chosen !== null && chosen !== undefined) {
-          const clean = chosen.trim();
-          if (clean) {
-            os.storage.set(StorageKeys.kagajModel, clean);
-            if (modelInput) {
-              modelInput.value = clean;
-            }
-            if (modelLabel) {
-              setText(modelLabel, `● Model: ${clean} ▾`);
-            }
-            this.showToast(win, `Model switched to ${clean}`);
-          }
-        }
-      });
-    }
+    bindEvent(settingsCloseBtn, "click", () => {
+      settingsModal.style.display = "none";
+    });
+
+    bindEvent(settingsBackdrop, "click", () => {
+      settingsModal.style.display = "none";
+    });
+
+    bindEvent(keyToggleBtn, "click", () => {
+      const isPassword = apiKeyInput.getAttribute("type") === "password";
+      apiKeyInput.setAttribute("type", isPassword ? "text" : "password");
+    });
+
+    bindEvent(saveSettingsBtn, "click", () => {
+      const chosenModel = modelInput?.value?.trim() || DEFAULT_GEMINI_MODEL;
+      const enteredKey = apiKeyInput?.value?.trim() || "";
+      os.storage.set(StorageKeys.kagajModel, chosenModel);
+      if (enteredKey) {
+        os.storage.set(StorageKeys.kagajApiKey, enteredKey);
+      }
+      if (modelBadgeText) {
+        setText(modelBadgeText, `Model: ${chosenModel} ⚙️`);
+      }
+      settingsModal.style.display = "none";
+      this.showToast(win, "✓ Settings saved!");
+    });
   }
 
   handleFile(win, file, state) {
     if (!file) return;
     state.selectedFile = file;
 
-    const dropZone = $(".kagaj-upload-zone", win);
-    const fileInfo = $(".kagaj-file-info", win);
-    const fileName = $(".file-name", win);
-    const fileSize = $(".file-size", win);
-    const extractBtn = $(".kagaj-extract-btn", win);
-    const errorBox = $(".kagaj-error-box", win);
-    const previewPlaceholder = $(".kagaj-preview-placeholder", win);
-    const previewSection = $(".kagaj-preview-section", win);
-    const previewImg = $(".kagaj-preview-img", win);
+    const dropZone = $("#dropZone", win);
+    const fileInfo = $("#fileInfo", win);
+    const fileName = $("#fileName", win);
+    const fileSize = $("#fileSize", win);
+    const extractBtn = $("#extractBtn", win);
+    const errorBox = $("#errorBox", win);
+    const previewPlaceholder = $("#previewPlaceholder", win);
+    const previewSection = $("#previewSection", win);
+    const previewImg = $("#previewImg", win);
 
     setText(fileName, file.name);
     setText(fileSize, formatFileSize(file.size));
@@ -428,40 +378,41 @@ export class KagajAiApp extends BaseApp {
           previewPlaceholder.style.display = "block";
           setHTML(
             previewPlaceholder,
-            '<div style="font-size: 3rem; margin-bottom: 0.5rem; opacity: 0.5;">📄</div><div>PDF preview unavailable. Ready to extract.</div>'
+            '<div style="font-size: 3rem; margin-bottom: 0.5rem; opacity: 0.5;">📄</div><div>PDF preview will appear after extraction</div>'
           );
         }
       };
       reader.readAsArrayBuffer(file);
+    } else {
+      previewPlaceholder.style.display = "block";
+      setHTML(
+        previewPlaceholder,
+        '<div style="font-size: 3rem; margin-bottom: 0.5rem; opacity: 0.5;">📄</div><div>Document ready to extract</div>'
+      );
     }
   }
 
   async extractWithAi(win, state) {
     if (!state.selectedFile) return;
 
-    const extractBtn = $(".kagaj-extract-btn", win);
-    const errorBox = $(".kagaj-error-box", win);
-    const resultsCard = $(".kagaj-results-card", win);
-    const resultFields = $(".kagaj-result-fields", win);
-    const formattedOutput = $(".kagaj-formatted-output", win);
-    const promptInput = $(".kagaj-prompt-textarea", win);
+    const extractBtn = $("#extractBtn", win);
+    const errorBox = $("#errorBox", win);
+    const resultsCard = $("#resultsCard", win);
+    const resultFields = $("#resultFields", win);
+    const formattedOutput = $("#formattedOutput", win);
+    const rawTextEl = $("#rawText", win);
+    const promptInput = $("#promptInput", win);
     const btnText = $(".btn-text", extractBtn);
-    const apiKeyInput = $(".kagaj-api-key-input", win);
-    const modelInput = $(".kagaj-model-input", win);
+    const apiKeyInput = $("#apiKeyInput", win);
+    const modelInput = $("#modelInput", win);
+    const settingsModal = $("#settingsModal", win);
 
     let apiKey = apiKeyInput?.value?.trim() || os.storage.get(StorageKeys.kagajApiKey) || DEFAULT_GEMINI_API_KEY;
     if (!apiKey) {
-      apiKey = await os.dialog.prompt("Gemini API Key", "Please enter your Google Gemini API Key:");
-      if (!apiKey || !apiKey.trim()) {
-        setText(errorBox, "Google Gemini API Key is required to extract text.");
-        toggleClass(errorBox, "visible", true);
-        return;
-      }
-      apiKey = apiKey.trim();
-      os.storage.set(StorageKeys.kagajApiKey, apiKey);
-      if (apiKeyInput) {
-        apiKeyInput.value = apiKey;
-      }
+      settingsModal.style.display = "flex";
+      setText(errorBox, "Please provide your Google Gemini API Key to extract documents.");
+      toggleClass(errorBox, "visible", true);
+      return;
     }
 
     extractBtn.disabled = true;
@@ -489,7 +440,7 @@ export class KagajAiApp extends BaseApp {
       }
 
       const defaultPrompt = "Extract ALL text visible in this document exactly as it is formatted.\nIf the document contains any tables, extract them using Markdown table format.\nPreserve paragraphs, headers, and list formatting using Markdown.\nReturn the extracted content in the original language (Nepali/English).";
-      const customPrompt = promptInput.value.trim();
+      const customPrompt = promptInput?.value?.trim();
       const promptText = customPrompt ? customPrompt : defaultPrompt;
 
       const chosenModel = modelInput?.value?.trim() || os.storage.get(StorageKeys.kagajModel) || DEFAULT_GEMINI_MODEL;
@@ -544,12 +495,12 @@ export class KagajAiApp extends BaseApp {
       setHTML(resultFields, "");
       if (parsedJson && typeof parsedJson === "object" && !Array.isArray(parsedJson)) {
         Object.entries(parsedJson).forEach(([key, value]) => {
-          const fieldCard = createElement("div", { className: "kagaj-result-field" });
-          const labelEl = createElement("div", { className: "kagaj-field-label", text: String(key) });
+          const fieldCard = createElement("div", { className: "result-field" });
+          const labelEl = createElement("div", { className: "field-label", text: String(key) });
           const textVal = typeof value === "object" ? JSON.stringify(value) : String(value);
-          const valEl = createElement("div", { className: "kagaj-field-value", text: textVal });
+          const valEl = createElement("div", { className: "field-value", text: textVal });
           const copyBtn = createElement("button", {
-            className: "kagaj-copy-btn",
+            className: "copy-btn",
             attributes: { type: "button" },
             text: "Copy"
           });
@@ -566,6 +517,9 @@ export class KagajAiApp extends BaseApp {
       const { marked } = await import("marked");
       const parsedMarkdown = marked.parse(rawText);
       setHTML(formattedOutput, parsedMarkdown);
+      if (rawTextEl) {
+        setText(rawTextEl, rawText);
+      }
       state.lastExtractedText = rawText;
       state.lastFileName = state.selectedFile?.name || "Kagaj_AI_Extracted";
       toggleClass(resultsCard, "visible", true);
@@ -634,50 +588,8 @@ export class KagajAiApp extends BaseApp {
     URL.revokeObjectURL(downloadUrl);
   }
 
-  downloadText(rawText, baseFileName, win) {
-    if (!rawText) {
-      this.showToast(win, "No extracted text to save!");
-      return;
-    }
-    const cleanBaseName = (baseFileName || "Kagaj_AI_Extracted").replace(/\.[^/.]+$/, "");
-    const blob = new Blob([rawText], { type: "text/plain;charset=utf-8" });
-    const downloadUrl = URL.createObjectURL(blob);
-    const downloadAnchor = createElement("a", {
-      attributes: {
-        href: downloadUrl,
-        download: `${cleanBaseName}.txt`
-      }
-    });
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    document.body.removeChild(downloadAnchor);
-    URL.revokeObjectURL(downloadUrl);
-    this.showToast(win, "✓ Text file downloaded!");
-  }
-
-  async saveToSitalOs(baseFileName, content, win) {
-    if (!content) {
-      this.showToast(win, "No extracted text to save!");
-      return;
-    }
-    try {
-      const cleanBaseName = (baseFileName || "Kagaj_AI_Extracted").replace(/\.[^/.]+$/, "");
-      const fileName = `${cleanBaseName}.txt`;
-      const dirPath = ["home", "Documents"];
-      const dirExists = await os.fs.exists(dirPath);
-      if (!dirExists) {
-        await os.fs.mkdir(dirPath).catch(() => {});
-      }
-      const fullPath = [...dirPath, fileName];
-      await os.fs.write(fullPath, content, { kind: "text", icon: "static/icons/notepad.webp" });
-      this.showToast(win, `✓ Saved to Documents/${fileName}`);
-    } catch (err) {
-      this.showToast(win, `Save failed: ${err.message}`);
-    }
-  }
-
   showToast(win, message = "✓ Copied to clipboard!") {
-    const toastEl = $(".kagaj-toast", win);
+    const toastEl = $("#toast", win);
     if (!toastEl) return;
     setText(toastEl, message);
     toggleClass(toastEl, "show", true);

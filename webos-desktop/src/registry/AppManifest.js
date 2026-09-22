@@ -52,6 +52,18 @@ export const APP_MANIFESTS = [
     description: "Listen to music tracks with playback controls playlist queue and media session integration."
   },
   {
+    serviceKey: "kagajAiApp",
+    enhanced: true,
+    type: "system",
+    title: "Kagaj AI",
+    icon: "papirus:apps/brainstorm",
+    launchType: "instance",
+    windowIdPatterns: ["kagaj-ai", "kagaj"],
+    category: "office",
+    clippy: { message: "Extract text and tables from documents using Kagaj AI.", animation: ClippyAnimation.Show },
+    description: "AI-powered document intelligence to extract handwritten Nepali text, tables, and documents."
+  },
+  {
     serviceKey: "aboutApp",
     enhanced: false,
     type: "system",
